@@ -1,0 +1,7 @@
+export default {
+  WHITE: '#FFFFFF',
+  BLACK: '#000000',
+  ORANGE: '#EF6C00',
+  ORANGE_LIGHT: '#F28328',
+  GREY_LIGHT: '#F5F5F5'
+}
