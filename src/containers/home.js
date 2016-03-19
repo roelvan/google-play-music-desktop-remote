@@ -8,7 +8,7 @@ import Toolbar from 'Toolbar'
 import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
 import wsMessages from 'GooglePlayMusicDesktopRemote/src/utils/wsMessages'
 
-const IP_ADDRESS = '192.168.1.50'
+const IP_ADDRESS = '192.168.1.11'
 const PORT = 5672
 const WEBSOCKET_ADDRESS = `ws://${IP_ADDRESS}:${PORT}`
 
@@ -89,11 +89,11 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    alignSelf: 'stretch'
   },
   content: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: colors.GREY_LIGHT
   }
 })
