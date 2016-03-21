@@ -1,7 +1,7 @@
 /**
  * @providesModule HomeScreen
  */
-import React, { StyleSheet, View } from 'react-native'
+import React, { StatusBar, StyleSheet, View } from 'react-native'
 import TrackCard from 'TrackCard'
 import ControlBar from 'ControlBar'
 import Toolbar from 'Toolbar'
@@ -73,6 +73,7 @@ export default class HomeScreen extends React.Component {
     const { title, artist, album, albumArt, isPlaying } = this.state
     return (
       <View style={styles.container}>
+        <StatusBar animated={true} backgroundColor={colors.ORANGE_DARK} />
         <Toolbar title='Home' />
         <View style={styles.content}>
           <TrackCard
