@@ -8,7 +8,7 @@ import Toolbar from 'Toolbar'
 import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
 import wsMessages from 'GooglePlayMusicDesktopRemote/src/utils/wsMessages'
 
-const IP_ADDRESS = '192.168.1.11'
+const IP_ADDRESS = '192.168.1.50'
 const PORT = 5672
 const WEBSOCKET_ADDRESS = `ws://${IP_ADDRESS}:${PORT}`
 
@@ -20,7 +20,8 @@ export default class HomeScreen extends React.Component {
       title: '',
       artist: '',
       album: '',
-      albumArt: ''
+      albumArt: '',
+      isPlaying: false
     }
   }
 
@@ -48,6 +49,10 @@ export default class HomeScreen extends React.Component {
       albumArt = albumArt.substring(0, albumArt.length - 11)
       this.setState({ title, artist, album, albumArt })
     }
+    if (channel === 'playState') {
+      const isPlaying = payload
+      this.setState({ isPlaying })
+    }
     if (channel !== 'time') {
       console.log(`WebSocket message received, channel: ${channel}, payload: ${payload}`)
     }
@@ -65,7 +70,7 @@ export default class HomeScreen extends React.Component {
   _sendMessage = message => this.ws.send(JSON.stringify(message))
 
   render () {
-    const { title, artist, album, albumArt } = this.state
+    const { title, artist, album, albumArt, isPlaying } = this.state
     return (
       <View style={styles.container}>
         <Toolbar title='Home' />
@@ -77,6 +82,7 @@ export default class HomeScreen extends React.Component {
             albumArt={albumArt}
           />
           <ControlBar
+            isPlaying={isPlaying}
             onPlayPress={this._handlePlayPress}
             onPrevPress={this._handlePrevPress}
             onNextPress={this._handleNextPress}

@@ -3,21 +3,33 @@
  */
 import React, { StyleSheet, Text, View } from 'react-native'
 import { getTheme } from 'react-native-material-kit'
-import TouchableView from 'TouchableView'
-import PlayPauseButton from 'PlayPauseButton'
+import CircleButton from 'CircleButton'
+import Icon from 'react-native-vector-icons/Entypo'
 import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
 
 const theme = getTheme()
 
-export default ({ onPlayPress, onPrevPress, onNextPress }) =>
+const playIcon = <Text>{' '}<Icon name='controller-play' size={42} color={colors.WHITE} /></Text>
+
+const pauseIcon = <Text><Icon name='controller-paus' size={32} color={colors.WHITE} /></Text>
+
+const prevIcon = <Icon name='controller-jump-to-start' size={26} color={colors.GREY_DARK} />
+
+const nextIcon = <Icon name='controller-next' size={26} color={colors.GREY_DARK} />
+
+export default ({ isPlaying, onPlayPress, onPrevPress, onNextPress }) =>
   <View style={[theme.cardStyle, styles.container]}>
-      <TouchableView onPress={onPrevPress}>
-        <Text>Prev</Text>
-      </TouchableView>
-      <PlayPauseButton onPress={onPlayPress} />
-      <TouchableView onPress={onNextPress}>
-        <Text>Next</Text>
-      </TouchableView>
+      <CircleButton onPress={onPrevPress} size={42}>
+        {prevIcon}
+      </CircleButton>
+      <CircleButton onPress={onPlayPress} size={68}>
+        <View style={styles.playPauseButton}>
+          {isPlaying ? pauseIcon : playIcon}
+        </View>
+      </CircleButton>
+      <CircleButton onPress={onNextPress} size={42}>
+        {nextIcon}
+      </CircleButton>
   </View>
 
 const styles = StyleSheet.create({
@@ -28,5 +40,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  playPauseButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 56,
+    height: 56,
+    borderRadius: 27,
+    backgroundColor: colors.ORANGE
   }
 })

@@ -4,5 +4,6 @@ export default {
   ORANGE: '#EF6C00',
   ORANGE_LIGHT: '#F28328',
   GREY_LIGHT: '#F5F5F5',
+  GREY_DARK: '#333333',
   GREY_RGB: '084,084,084'
 }
