@@ -4,49 +4,67 @@
 import React, { StyleSheet, Text, View } from 'react-native'
 import { getTheme } from 'react-native-material-kit'
 import CircleButton from 'CircleButton'
-import Icon from 'react-native-vector-icons/Entypo'
+import PlayPauseButton from 'PlayPauseButton'
+import IconMaterial from 'react-native-vector-icons/MaterialIcons'
 import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
 
 const theme = getTheme()
 
-const playIcon = <Text>{' '}<Icon name='controller-play' size={42} color={colors.WHITE} /></Text>
+export default class ControlBar extends React.Component {
 
-const pauseIcon = <Text><Icon name='controller-paus' size={32} color={colors.WHITE} /></Text>
+  static propTypes = {
+    isPlaying: React.PropTypes.bool,
+    isStopped: React.PropTypes.bool,
+    onPlayPress: React.PropTypes.func,
+    onPrevPress: React.PropTypes.func,
+    onNextPress: React.PropTypes.func,
+    onRepeatPress: React.PropTypes.func,
+    onShufflePress: React.PropTypes.func
+  }
 
-const prevIcon = <Icon name='controller-jump-to-start' size={26} color={colors.GREY_DARK} />
+  static defaultProps = {
+    isPlaying: false,
+    isStopped: true
+  }
 
-const nextIcon = <Icon name='controller-next' size={26} color={colors.GREY_DARK} />
+  render = () => {
+    console.log(isStopped)
+    const { onPlayPress, onPrevPress, onNextPress, onRepeatPress, onShufflePress, isPlaying, isStopped } = this.props
+    const repeatIcon = <IconMaterial name='repeat' size={26} color={colors.GREY_DARK} />
+    const prevIcon = <IconMaterial name='skip-previous' size={26} color={colors.GREY_DARK} />
+    const nextIcon = <IconMaterial name='skip-next' size={26} color={colors.GREY_DARK} />
+    const shuffleIcon = <IconMaterial name='shuffle' size={26} color={colors.GREY_DARK} />
 
-export default ({ isPlaying, onPlayPress, onPrevPress, onNextPress }) =>
-  <View style={[theme.cardStyle, styles.container]}>
-      <CircleButton onPress={onPrevPress} size={42}>
-        {prevIcon}
-      </CircleButton>
-      <CircleButton onPress={onPlayPress} size={68}>
-        <View style={styles.playPauseButton}>
-          {isPlaying ? pauseIcon : playIcon}
-        </View>
-      </CircleButton>
-      <CircleButton onPress={onNextPress} size={42}>
-        {nextIcon}
-      </CircleButton>
-  </View>
+    return (
+      <View style={[theme.cardStyle, styles.container]}>
+        <CircleButton onPress={onRepeatPress} size={42}>
+          {repeatIcon}
+        </CircleButton>
+        <CircleButton onPress={onPrevPress} size={42}>
+          {prevIcon}
+        </CircleButton>
+        <CircleButton onPress={onPlayPress} size={78}>
+          <PlayPauseButton isPlaying={isPlaying} isStopped={isStopped} />
+        </CircleButton>
+        <CircleButton onPress={onNextPress} size={42}>
+          {nextIcon}
+        </CircleButton>
+        <CircleButton onPress={onShufflePress} size={42}>
+          {shuffleIcon}
+        </CircleButton>
+      </View>
+    )
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 0,
     height: 82,
     elevation: 4,
+    padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
-  },
-  playPauseButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 56,
-    height: 56,
-    borderRadius: 27,
-    backgroundColor: colors.ORANGE
+    justifyContent: 'space-between'
   }
 })

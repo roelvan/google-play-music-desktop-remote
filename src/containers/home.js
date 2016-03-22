@@ -21,7 +21,10 @@ export default class HomeScreen extends React.Component {
       artist: '',
       album: '',
       albumArt: '',
-      isPlaying: false
+      shuffleStatus: '',
+      repeatStatus: '',
+      isPlaying: false,
+      isStopped: true
     }
   }
 
@@ -48,6 +51,7 @@ export default class HomeScreen extends React.Component {
       let { title, artist, album, albumArt } = payload
       albumArt = albumArt.substring(0, albumArt.length - 11)
       this.setState({ title, artist, album, albumArt })
+      this.setState({ isStopped: false })
     }
     if (channel === 'playState') {
       const isPlaying = payload
@@ -61,16 +65,32 @@ export default class HomeScreen extends React.Component {
   _handlePlayPress = () =>
     this._sendMessage(wsMessages.PLAY_PAUSE)
 
-  _handlePrevPress = () =>
+  _handlePrevPress = () => {
     this._sendMessage(wsMessages.PREV)
+    this.setState({ isStopped: true })
+  }
 
-  _handleNextPress = () =>
+  _handleNextPress = () => {
     this._sendMessage(wsMessages.PREV)
+    this.setState({ isStopped: true })
+  }
 
-  _sendMessage = message => this.ws.send(JSON.stringify(message))
+  _handleShufflePress = () =>
+    this._sendMessage([wsMessages.TOGGLE_SHUFFLE, wsMessages.GET_SHUFFLE])
+
+  _handleRepeatPress = () =>
+    this._sendMessage([wsMessages.TOGGLE_REPEAT, wsMessages.GET_REPEAT])
+
+  _sendMessage = message => {
+    if (message.isArray) {
+      message.forEach(msg => this.ws.send(JSON.stringify(message)))
+    } else {
+      this.ws.send(JSON.stringify(message))
+    }
+  }
 
   render () {
-    const { title, artist, album, albumArt, isPlaying } = this.state
+    const { title, artist, album, albumArt, isPlaying, isStopped } = this.state
     return (
       <View style={styles.container}>
         <StatusBar animated={true} backgroundColor={colors.ORANGE_DARK} />
@@ -84,9 +104,12 @@ export default class HomeScreen extends React.Component {
           />
           <ControlBar
             isPlaying={isPlaying}
+            isStopped={isStopped}
             onPlayPress={this._handlePlayPress}
             onPrevPress={this._handlePrevPress}
             onNextPress={this._handleNextPress}
+            onShufflePress={this._handleShufflePress}
+            onRepeatPress={this._handleRepeatPress}
           />
         </View>
       </View>
@@ -101,6 +124,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    backgroundColor: colors.GREY_LIGHT
+    backgroundColor: colors.GREY_LIGHTER
   }
 })
