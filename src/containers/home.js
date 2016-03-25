@@ -1,12 +1,14 @@
-/**
- * @providesModule HomeScreen
- */
+/** @providesModule HomeScreen */
 import React, { StatusBar, StyleSheet, View } from 'react-native'
+import { getTheme } from 'react-native-material-kit'
 import TrackCard from 'TrackCard'
 import ControlBar from 'ControlBar'
+import ProgressSlider from 'ProgressSlider'
 import Toolbar from 'Toolbar'
 import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
 import wsMessages from 'GooglePlayMusicDesktopRemote/src/utils/wsMessages'
+
+const theme = getTheme()
 
 const IP_ADDRESS = '192.168.1.50'
 const PORT = 5672
@@ -24,7 +26,9 @@ export default class HomeScreen extends React.Component {
       shuffleStatus: '',
       repeatStatus: '',
       isPlaying: false,
-      isStopped: true
+      isStopped: true,
+      currentTime: 0,
+      totalTime: 0
     }
   }
 
@@ -56,6 +60,10 @@ export default class HomeScreen extends React.Component {
     if (channel === 'playState') {
       const isPlaying = payload
       this.setState({ isPlaying })
+    }
+    if (channel === 'time') {
+      this.setState({ currentTime: payload.current, totalTime: payload.total })
+      this.progressSliderRef.setValue(this.state.currentTime)
     }
     if (channel !== 'time') {
       console.log(`WebSocket message received, channel: ${channel}, payload: ${payload}`)
@@ -90,7 +98,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render () {
-    const { title, artist, album, albumArt, isPlaying, isStopped } = this.state
+    const { title, artist, album, albumArt, isPlaying, isStopped, totalTime } = this.state
     return (
       <View style={styles.container}>
         <StatusBar animated={true} backgroundColor={colors.ORANGE_DARK} />
@@ -102,14 +110,22 @@ export default class HomeScreen extends React.Component {
             album={album}
             albumArt={albumArt}
           />
-          <ControlBar
-            isPlaying={isPlaying}
-            isStopped={isStopped}
-            onPlayPress={this._handlePlayPress}
-            onPrevPress={this._handlePrevPress}
-            onNextPress={this._handleNextPress}
-            onShufflePress={this._handleShufflePress}
-            onRepeatPress={this._handleRepeatPress}
+          <View style={[theme.cardStyle, styles.controlBar]}>
+            <ControlBar
+              isPlaying={isPlaying}
+              isStopped={isStopped}
+              onPlayPress={this._handlePlayPress}
+              onPrevPress={this._handlePrevPress}
+              onNextPress={this._handleNextPress}
+              onShufflePress={this._handleShufflePress}
+              onRepeatPress={this._handleRepeatPress}
+            />
+          </View>
+          <ProgressSlider
+            ref={r => this.progressSliderRef = r}
+            min={0}
+            max={totalTime}
+            onTouchUp={r => console.log(`onEnd fired: ${r}`)}
           />
         </View>
       </View>
@@ -125,5 +141,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: colors.GREY_LIGHTER
+  },
+  controlBar: {
+    flex: 0,
+    height: 100,
+    elevation: 4
   }
 })

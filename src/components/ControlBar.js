@@ -28,7 +28,6 @@ export default class ControlBar extends React.Component {
   }
 
   render = () => {
-    console.log(isStopped)
     const { onPlayPress, onPrevPress, onNextPress, onRepeatPress, onShufflePress, isPlaying, isStopped } = this.props
     const repeatIcon = <IconMaterial name='repeat' size={26} color={colors.GREY_DARK} />
     const prevIcon = <IconMaterial name='skip-previous' size={26} color={colors.GREY_DARK} />
@@ -36,7 +35,7 @@ export default class ControlBar extends React.Component {
     const shuffleIcon = <IconMaterial name='shuffle' size={26} color={colors.GREY_DARK} />
 
     return (
-      <View style={[theme.cardStyle, styles.container]}>
+      <View style={styles.container}>
         <CircleButton onPress={onRepeatPress} size={42}>
           {repeatIcon}
         </CircleButton>
@@ -60,9 +59,9 @@ export default class ControlBar extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 0,
-    height: 82,
+    height: 100,
     elevation: 4,
-    padding: 20,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
