@@ -5,5 +5,6 @@ export default {
   GET_SHUFFLE: { namespace: 'playback', method: 'getShuffle' },
   TOGGLE_SHUFFLE: { namespace: 'playback', method: 'toggleShuffle' },
   GET_REPEAT: { namespace: 'playback', method: 'getRepeat' },
-  TOGGLE_REPEAT: { namespace: 'playback', method: 'toggleRepeat' }
+  TOGGLE_REPEAT: { namespace: 'playback', method: 'toggleRepeat' },
+  SET_TIME: (args) => ({ namespace: 'playback', method: 'setPlaybackTime', arguments: args })
 }

@@ -89,6 +89,9 @@ export default class HomeScreen extends React.Component {
   _handleRepeatPress = () =>
     this._sendMessage([wsMessages.TOGGLE_REPEAT, wsMessages.GET_REPEAT])
 
+  _handleProgressBarTouch = (value) =>
+    this._sendMessage(wsMessages.SET_TIME([value]))
+
   _sendMessage = message => {
     if (message.isArray) {
       message.forEach(msg => this.ws.send(JSON.stringify(message)))
@@ -125,7 +128,7 @@ export default class HomeScreen extends React.Component {
             ref={r => this.progressSliderRef = r}
             min={0}
             max={totalTime}
-            onTouchUp={r => console.log(`onEnd fired: ${r}`)}
+            onTouchUp={this._handleProgressBarTouch}
           />
         </View>
       </View>
