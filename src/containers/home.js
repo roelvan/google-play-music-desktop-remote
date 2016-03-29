@@ -104,7 +104,7 @@ export default class HomeScreen extends React.Component {
     const { title, artist, album, albumArt, isPlaying, isStopped, totalTime } = this.state
     return (
       <View style={styles.container}>
-        <StatusBar animated={true} backgroundColor={colors.ORANGE_DARK} />
+        <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
         <Toolbar title='Home' />
         <View style={styles.content}>
           <TrackCard

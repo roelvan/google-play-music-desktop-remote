@@ -13,12 +13,20 @@ export default class ProgressSlider extends React.Component {
     }
   }
 
-  setValue = value => {
+  setValue = (value) => {
     if (!this.state.isTouched) this.sliderRef.value = value
   }
 
+  _handleTouchDown = (value) =>
+    this.setState({ isTouched: true })
+
+  _handleTouchUp = (value) => {
+    this.setState({ isTouched: false })
+    this.props.onTouchUp(value)
+  }
+
   render () {
-    const { min, max, onChange, onTouchUp } = this.props
+    const { min, max } = this.props
     return (
       <MKSlider
         ref={r => this.sliderRef = r}
@@ -26,8 +34,8 @@ export default class ProgressSlider extends React.Component {
         min={min}
         max={max}
         trackSize={6}
-        onChange={onChange}
-        onTouchUp={onTouchUp}
+        onTouchDown={this._handleTouchDown}
+        onTouchUp={this._handleTouchUp}
         upperTrackColor={colors.WHITE}
         lowerTrackColor={colors.ORANGE}
       />
