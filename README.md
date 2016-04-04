@@ -1,2 +1,18 @@
 # google-play-music-desktop-remote
-What a boring name, it's just a React-Native app for remote controlling [Google Play Music Desktop](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-) (and still a wip).
+A React-Native app for remote controlling the awesome [Google Play Music Desktop](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-).  
+**On hold: waiting for [some new GPMDP websocket API endpoints](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-/issues/845).**
+
+<br />
+<br />
+
+<p align="center">
+  <img align="center" src="https://raw.githubusercontent.com/mmazzarolo/google-play-music-desktop-remote/master/extras/emulator-screen.png" width="320">
+</p>
+
+<br />
+<br />
+<br />
+
+<p align="center">
+  <img align="center" src="https://raw.githubusercontent.com/mmazzarolo/google-play-music-desktop-remote/master/extras/gpmdp-and-emulator.png" width="720">  
+</p>
