@@ -43,13 +43,13 @@ export default class HomeScreen extends React.Component {
   _onWsOpen = () =>
     console.log(`WebSocket connection open: ${WEBSOCKET_ADDRESS} `)
 
-  _onWsError = error =>
+  _onWsError = (error) =>
     console.log(`WebSocket error: ${error.message} `)
 
-  _onWsClose = e =>
+  _onWsClose = (e) =>
     console.log(`WebSocket connection closed: ${WEBSOCKET_ADDRESS} `)
 
-  _onWsMessage = msg => {
+  _onWsMessage = (msg) => {
     const { channel, payload } = JSON.parse(msg.data)
     if (channel === 'song') {
       let { title, artist, album, albumArt } = payload
@@ -92,9 +92,9 @@ export default class HomeScreen extends React.Component {
   _handleProgressBarTouch = (value) =>
     this._sendMessage(wsMessages.SET_TIME([value]))
 
-  _sendMessage = message => {
+  _sendMessage = (message) => {
     if (message.isArray) {
-      message.forEach(msg => this.ws.send(JSON.stringify(message)))
+      message.forEach((msg) => this.ws.send(JSON.stringify(message)))
     } else {
       this.ws.send(JSON.stringify(message))
     }
@@ -125,7 +125,7 @@ export default class HomeScreen extends React.Component {
             />
           </View>
           <ProgressSlider
-            ref={r => this.progressSliderRef = r}
+            ref={(r) => this.progressSliderRef = r}
             min={0}
             max={totalTime}
             onTouchUp={this._handleProgressBarTouch}
