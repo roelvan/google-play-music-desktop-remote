@@ -107,12 +107,14 @@ export default class HomeScreen extends React.Component {
         <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
         <Toolbar title='Home' />
         <View style={styles.content}>
+          <View style={{ flex: 1, alignItems: 'center' }}>
           <TrackCard
             title={title}
             artist={artist}
             album={album}
             albumArt={albumArt}
           />
+          </View>
           <View style={[theme.cardStyle, styles.controlBar]}>
             <ControlBar
               isPlaying={isPlaying}
