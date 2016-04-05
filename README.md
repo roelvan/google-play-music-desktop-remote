@@ -1,4 +1,4 @@
-# google-play-music-desktop-remote
+# Google Play Music Desktop Remote
 A React-Native app for remote controlling the awesome [Google Play Music Desktop](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-).  
 **On hold: waiting for [some new GPMDP websocket API endpoints](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-/issues/845).**
 
