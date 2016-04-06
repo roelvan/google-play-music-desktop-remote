@@ -17,7 +17,10 @@ A React-Native app for remote controlling the awesome [Google Play Music Desktop
   <img align="center" src="https://raw.githubusercontent.com/mmazzarolo/google-play-music-desktop-remote/master/extras/gpmdp-and-emulator.png" width="720">  
 </p>
 
-Ideas/features:
+<br />
+<br />
+
+Ideas / next features:
 - Adding tests
 - Adding Redux (not strictly needed but helps testing)
 - Adding a screen that shows the available GPMDPlayers
