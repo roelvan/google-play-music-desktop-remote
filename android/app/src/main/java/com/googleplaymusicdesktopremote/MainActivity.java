@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.balthazargronon.react.ZeroconfReactPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -38,6 +39,7 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new ZeroconfReactPackage(),
             new ReactMaterialKitPackage(),
             new VectorIconsPackage()
         );

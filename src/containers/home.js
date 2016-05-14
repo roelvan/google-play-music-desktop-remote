@@ -5,6 +5,7 @@ import TrackCard from 'TrackCard'
 import ControlBar from 'ControlBar'
 import ProgressSlider from 'ProgressSlider'
 import Toolbar from 'Toolbar'
+import Zeroconf from 'react-native-zeroconf'
 import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
 import wsMessages from 'GooglePlayMusicDesktopRemote/src/utils/wsMessages'
 
@@ -38,6 +39,14 @@ export default class HomeScreen extends React.Component {
     this.ws.onerror = this._onWsError
     this.ws.onmessage = this._onWsMessage
     this.ws.onclose = this._onWsClose
+
+    this.zeroconf = new Zeroconf()
+    // this.zeroconf.scan(type = 'http', protocol = 'tcp', domain = 'local.')
+    this.zeroconf.scan('GPMDP')
+    this.zeroconf.on('start', () => console.log('start.'))
+    this.zeroconf.on('found', () => console.log('found.'))
+    this.zeroconf.on('resolved', () => console.log('resolved.'))
+    this.zeroconf.on('error', () => console.log('error.'))
   }
 
   _onWsOpen = () =>
