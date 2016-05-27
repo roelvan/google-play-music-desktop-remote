@@ -1,4 +1,4 @@
-# Google Play Music Desktop App (wip)
+# Google Play Music Desktop Remote (wip)
 An application for remote controlling the awesome [Google Play Music Desktop](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-).   
 Built with:
 - React-Native
