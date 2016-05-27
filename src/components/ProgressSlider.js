@@ -8,6 +8,7 @@ export default class ProgressSlider extends React.Component {
   static propTypes = {
     min: PropTypes.number,
     max: PropTypes.number,
+    value: PropTypes.number,
     onTouchUp: PropTypes.func
   }
 
@@ -16,6 +17,10 @@ export default class ProgressSlider extends React.Component {
     this.state = {
       isTouched: false
     }
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.value !== this.props.value) this.setValue(this.props.value)
   }
 
   setValue = (value) => {
