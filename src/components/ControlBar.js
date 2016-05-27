@@ -1,25 +1,19 @@
-/**
- * @providesModule ControlBar
- */
-import React, { StyleSheet, Text, View } from 'react-native'
-import { getTheme } from 'react-native-material-kit'
-import CircleButton from 'CircleButton'
-import PlayPauseButton from 'PlayPauseButton'
+import React, { PropTypes } from 'react'
+import { StyleSheet, View } from 'react-native'
 import IconMaterial from 'react-native-vector-icons/MaterialIcons'
-import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
-
-const theme = getTheme()
+import CircleButton from './CircleButton'
+import PlayPauseButton from './PlayPauseButton'
+import colors from '../theme/colors'
 
 export default class ControlBar extends React.Component {
-
   static propTypes = {
-    isPlaying: React.PropTypes.bool,
-    isStopped: React.PropTypes.bool,
-    onPlayPress: React.PropTypes.func,
-    onPrevPress: React.PropTypes.func,
-    onNextPress: React.PropTypes.func,
-    onRepeatPress: React.PropTypes.func,
-    onShufflePress: React.PropTypes.func
+    isPlaying: PropTypes.bool,
+    isStopped: PropTypes.bool,
+    onPlayPress: PropTypes.func,
+    onPrevPress: PropTypes.func,
+    onNextPress: PropTypes.func,
+    onRepeatPress: PropTypes.func,
+    onShufflePress: PropTypes.func
   }
 
   static defaultProps = {
@@ -29,10 +23,10 @@ export default class ControlBar extends React.Component {
 
   render = () => {
     const { onPlayPress, onPrevPress, onNextPress, onRepeatPress, onShufflePress, isPlaying, isStopped } = this.props
-    const repeatIcon = <IconMaterial name='repeat' size={26} color={colors.GREY_DARK} />
-    const prevIcon = <IconMaterial name='skip-previous' size={26} color={colors.GREY_DARK} />
-    const nextIcon = <IconMaterial name='skip-next' size={26} color={colors.GREY_DARK} />
-    const shuffleIcon = <IconMaterial name='shuffle' size={26} color={colors.GREY_DARK} />
+    const repeatIcon = <IconMaterial name={'repeat'} size={26} color={colors.GREY_DARK} />
+    const prevIcon = <IconMaterial name={'skip-previous'} size={26} color={colors.GREY_DARK} />
+    const nextIcon = <IconMaterial name={'skip-next'} size={26} color={colors.GREY_DARK} />
+    const shuffleIcon = <IconMaterial name={'shuffle'} size={26} color={colors.GREY_DARK} />
 
     return (
       <View style={styles.container}>

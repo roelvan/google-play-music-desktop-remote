@@ -1,18 +1,18 @@
-/** @providesModule TrackCard */
-import React, { Image, StyleSheet, Text, View } from 'react-native'
+import React, { PropTypes } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import { getTheme } from 'react-native-material-kit'
-import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
-import dimensions from 'GooglePlayMusicDesktopRemote/src/config/dimensions'
+import colors from '../theme/colors'
+import metrics from '../theme/metrics'
 
 const theme = getTheme()
 
 const placeholder = 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg'
 
-export default ({ title, artist, album, albumArt }) =>
+const TrackCard = ({ title, artist, album, albumArt }) => (
   <View style={[theme.cardStyle, styles.container]}>
     <Image
       source={{ uri: albumArt === '' ? placeholder : albumArt }}
-      resizeMode='cover'
+      resizeMode={'cover'}
       style={{ flex: 1, margin: -2 }}
     />
     <View style={{ margin: 15 }}>
@@ -24,6 +24,18 @@ export default ({ title, artist, album, albumArt }) =>
       </Text>
     </View>
   </View>
+)
+
+TrackCard.propTypes = {
+  title: PropTypes.string,
+  artist: PropTypes.string,
+  album: PropTypes.string,
+  albumArt: PropTypes.string
+}
+
+TrackCard.defaultProps = {
+  albumArt: placeholder
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
     elevation: 2,
     marginVertical: 40,
-    width: dimensions.DEVICE_WIDTH * 0.7
+    width: metrics.DEVICE_WIDTH * 0.7
   },
   titleText: {
     padding: 0,
@@ -42,3 +54,5 @@ const styles = StyleSheet.create({
     padding: 0
   }
 })
+
+export default TrackCard

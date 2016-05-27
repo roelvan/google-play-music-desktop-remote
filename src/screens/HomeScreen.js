@@ -1,21 +1,21 @@
-/** @providesModule HomeScreen */
-import React, { StatusBar, StyleSheet, View } from 'react-native'
+import React, { Component } from 'react'
+import { StatusBar, StyleSheet, View } from 'react-native'
 import { getTheme } from 'react-native-material-kit'
-import TrackCard from 'TrackCard'
-import ControlBar from 'ControlBar'
-import ProgressSlider from 'ProgressSlider'
-import Toolbar from 'Toolbar'
-import Zeroconf from 'react-native-zeroconf'
-import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
-import wsMessages from 'GooglePlayMusicDesktopRemote/src/utils/wsMessages'
+// import Zeroconf from 'react-native-zeroconf'
+import TrackCard from '../components/TrackCard'
+import ControlBar from '../components/ControlBar'
+import ProgressSlider from '../components/ProgressSlider'
+import Toolbar from '../components/Toolbar'
+import colors from '../theme/colors'
+import wsMessages from '../utils/wsMessages'
 
 const theme = getTheme()
 
-const IP_ADDRESS = '192.168.1.50'
+const IP_ADDRESS = '192.168.1.60'
 const PORT = 5672
 const WEBSOCKET_ADDRESS = `ws://${IP_ADDRESS}:${PORT}`
 
-export default class HomeScreen extends React.Component {
+export default class HomeScreen extends Component {
 
   constructor (props) {
     super(props)
@@ -40,13 +40,13 @@ export default class HomeScreen extends React.Component {
     this.ws.onmessage = this._onWsMessage
     this.ws.onclose = this._onWsClose
 
-    this.zeroconf = new Zeroconf()
+    // this.zeroconf = new Zeroconf()
     // this.zeroconf.scan(type = 'http', protocol = 'tcp', domain = 'local.')
-    this.zeroconf.scan('GPMDP')
-    this.zeroconf.on('start', () => console.log('start.'))
-    this.zeroconf.on('found', () => console.log('found.'))
-    this.zeroconf.on('resolved', () => console.log('resolved.'))
-    this.zeroconf.on('error', () => console.log('error.'))
+    // this.zeroconf.scan('GPMDP')
+    // this.zeroconf.on('start', () => console.log('start.'))
+    // this.zeroconf.on('found', () => console.log('found.'))
+    // this.zeroconf.on('resolved', () => console.log('resolved.'))
+    // this.zeroconf.on('error', () => console.log('error.'))
   }
 
   _onWsOpen = () =>
@@ -72,7 +72,7 @@ export default class HomeScreen extends React.Component {
     }
     if (channel === 'time') {
       this.setState({ currentTime: payload.current, totalTime: payload.total })
-      this.progressSliderRef.setValue(this.state.currentTime)
+      this.refs.progressSlider.setValue(this.state.currentTime)
     }
     if (channel !== 'time') {
       console.log(`WebSocket message received, channel: ${channel}, payload: ${payload}`)
@@ -114,15 +114,15 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
-        <Toolbar title='Home' />
+        <Toolbar title={'Home'} />
         <View style={styles.content}>
           <View style={{ flex: 1, alignItems: 'center' }}>
-          <TrackCard
-            title={title}
-            artist={artist}
-            album={album}
-            albumArt={albumArt}
-          />
+            <TrackCard
+              title={title}
+              artist={artist}
+              album={album}
+              albumArt={albumArt}
+            />
           </View>
           <View style={[theme.cardStyle, styles.controlBar]}>
             <ControlBar
@@ -136,7 +136,7 @@ export default class HomeScreen extends React.Component {
             />
           </View>
           <ProgressSlider
-            ref={(r) => this.progressSliderRef = r}
+            ref={'progressSlider'}
             min={0}
             max={totalTime}
             onTouchUp={this._handleProgressBarTouch}

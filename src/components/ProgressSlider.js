@@ -1,10 +1,15 @@
-/** @providesModule ProgressSlider */
-import React, { StyleSheet } from 'react-native'
+import React, { PropTypes } from 'react'
+import { StyleSheet } from 'react-native'
 import { MKSlider } from 'react-native-material-kit'
-import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
-import dimensions from 'GooglePlayMusicDesktopRemote/src/config/dimensions'
+import colors from '../theme/colors'
+import metrics from '../theme/metrics'
 
 export default class ProgressSlider extends React.Component {
+  static propTypes = {
+    min: PropTypes.number,
+    max: PropTypes.number,
+    onTouchUp: PropTypes.func
+  }
 
   constructor (props) {
     super(props)
@@ -14,11 +19,12 @@ export default class ProgressSlider extends React.Component {
   }
 
   setValue = (value) => {
-    if (!this.state.isTouched) this.sliderRef.value = value
+    if (!this.state.isTouched) this.refs.slider.value = value
   }
 
-  _handleTouchDown = (value) =>
+  _handleTouchDown = (value) => {
     this.setState({ isTouched: true })
+  }
 
   _handleTouchUp = (value) => {
     this.setState({ isTouched: false })
@@ -29,7 +35,7 @@ export default class ProgressSlider extends React.Component {
     const { min, max } = this.props
     return (
       <MKSlider
-        ref={r => this.sliderRef = r}
+        ref={'slider'}
         style={styles.slider}
         min={min}
         max={max}
@@ -47,7 +53,7 @@ const styles = StyleSheet.create({
   slider: {
     position: 'absolute',
     bottom: 82,
-    width: dimensions.DEVICE_WIDTH + 30,
+    width: metrics.DEVICE_WIDTH + 30,
     marginLeft: -15,
     marginRight: -15,
     left: 0,

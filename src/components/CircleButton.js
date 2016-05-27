@@ -1,19 +1,26 @@
-/**
- * @providesModule CircleButton
- */
-import React, { StyleSheet } from 'react-native'
+import React, { PropTypes } from 'react'
+import { StyleSheet } from 'react-native'
 import { MKButton } from 'react-native-material-kit'
-import colors from 'GooglePlayMusicDesktopRemote/src/config/colors'
+import colors from '../theme/colors'
 
-export default ({ onPress, size, style, children }) =>
+const CircleButton = ({ onPress, size, style, children }) => (
   <MKButton
     style={[{ width: size, height: size, borderRadius: size / 2 }, styles.container, style]}
     rippleColor={`rgba(${colors.GREY_RGB},.2)`}
     fab={true}
     onPress={onPress}
-    rippleLocation='center'>
+    rippleLocation={'center'}
+  >
     {children}
   </MKButton>
+)
+
+CircleButton.propTypes = {
+  onPress: PropTypes.func,
+  size: PropTypes.number,
+  style: PropTypes.any,
+  children: PropTypes.node
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -21,3 +28,5 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+
+export default CircleButton
