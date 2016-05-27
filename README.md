@@ -1,7 +1,10 @@
-# Google Play Music Desktop Remote
-A React-Native app for remote controlling the awesome [Google Play Music Desktop](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-).  
-**On hold: waiting for [some new GPMDP websocket API endpoints](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-/issues/845).**
-
+# Google Play Music Desktop App (wip)
+An application for remote controlling the awesome [Google Play Music Desktop](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-).   
+Built with:
+- React-Native
+- WebSocket for communicating with the Desktop App
+- [MobX](https://github.com/mobxjs/mobx) for state management
+- [React-Native Material Kit](https://github.com/xinthink/react-native-material-kit/) for the material design theme
 <br />
 <br />
 
@@ -20,7 +23,8 @@ A React-Native app for remote controlling the awesome [Google Play Music Desktop
 <br />
 <br />
 
-Ideas / next features:
-- Adding tests
-- Adding Redux (not strictly needed but helps testing)
-- Adding a screen that shows the available GPMDPlayers
+TO-DO:
+- Unit tests
+- Zeroconf for discovering GPMDPlayers
+- Routing
+- Showing the available GPMDPlayers
