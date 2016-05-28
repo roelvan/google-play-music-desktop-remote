@@ -92,10 +92,17 @@ android {
     }
     signingConfigs {
       release {
-        storeFile file(MYAPP_RELEASE_STORE_FILE)
-        storePassword MYAPP_RELEASE_STORE_PASSWORD
-        keyAlias MYAPP_RELEASE_KEY_ALIAS
-        keyPassword MYAPP_RELEASE_KEY_PASSWORD
+        if (System.getenv()["CI"]) { // CI=true is exported by Greenhouse
+          storeFile file(System.getenv()["GH_KEYSTORE_PATH"])
+          storePassword System.getenv()["GH_KEYSTORE_PASSWORD"]
+          keyAlias System.getenv()["GH_KEY_ALIAS"]
+          keyPassword System.getenv()["GH_KEY_PASSWORD"]
+        } else {
+          storeFile file(MYAPP_RELEASE_STORE_FILE)
+          storePassword MYAPP_RELEASE_STORE_PASSWORD
+          keyAlias MYAPP_RELEASE_KEY_ALIAS
+          keyPassword MYAPP_RELEASE_KEY_PASSWORD
+        }
       }
     }
     splits {
