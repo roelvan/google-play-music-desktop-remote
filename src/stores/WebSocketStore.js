@@ -51,7 +51,7 @@ export default class WebSocketStore {
     switch (channel) {
       case 'song': {
         const { title, artist, album } = payload
-        const albumArt = payload.albumArt.substring(0, payload.albumArt.length - 11)
+        const albumArt = payload.albumArt && payload.albumArt.substring(0, payload.albumArt.length - 11)
         this.trackStore.changeTrack(title, artist, album, albumArt)
         this.trackStore.start()
         break
