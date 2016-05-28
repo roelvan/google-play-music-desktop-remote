@@ -1,0 +1,14 @@
+machine:
+  node:
+    version: 6.1.0
+
+dependencies:
+  pre:
+    - echo y | android update sdk --no-ui --all --filter tool,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository,android-23
+    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.1
+
+test:
+  override:
+    - cd ./android && ./gradlew clean
+    - cd ./android && ./gradlew assembleFastRelease
+    - cp -r ./android/app/build/outputs $CIRCLE_ARTIFACTS
