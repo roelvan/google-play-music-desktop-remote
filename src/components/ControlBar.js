@@ -26,13 +26,13 @@ export default class ControlBar extends React.Component {
   render = () => {
     const { onPlayPress, onPrevPress, onNextPress, onRepeatPress, onShufflePress, isPlaying, isStopped, repeatMode, shuffleMode } = this.props
 
-    let repeatColor = colors.GREY_DARK;
-    let shuffleColor = colors.GREY_DARK;
+    let repeatColor = colors.GREY_DARK
+    let shuffleColor = colors.GREY_DARK
     if (repeatMode !== 'NO_REPEAT') {
-      repeatColor = colors.ORANGE;
+      repeatColor = colors.ORANGE
     }
     if (shuffleMode !== 'NO_SHUFFLE') {
-      shuffleColor = colors.ORANGE;
+      shuffleColor = colors.ORANGE
     }
     const repeatIcon = <IconMaterial name={repeatMode === 'SINGLE_REPEAT' ? 'repeat-one' : 'repeat'} size={26} color={repeatColor} />
     const prevIcon = <IconMaterial name={'skip-previous'} size={26} color={colors.GREY_DARK} />
