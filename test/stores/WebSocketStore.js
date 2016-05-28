@@ -56,7 +56,7 @@ describe('WebSocket Store - Connection', () => {
     const webSocketStore = new WebSocketStore()
     webSocketStore.connect()
     webSocketStore._onConnectionClose()
-    expect(webSocketStore.isConnecting).to.be.false
+    expect(webSocketStore.isConnecting).to.be.true
     expect(webSocketStore.isConnected).to.be.false
   })
 })
@@ -160,7 +160,7 @@ describe('WebSocket Store - Send messages', () => {
   it('sends a prev message', () => {
     webSocketStore.sendPrev()
     expect(webSocketStore.webSocket.lastmessage).to.deep.equal(
-      JSON.stringify({ namespace: 'playback', method: 'prev' })
+      JSON.stringify({ namespace: 'playback', method: 'rewind' })
     )
   })
 
