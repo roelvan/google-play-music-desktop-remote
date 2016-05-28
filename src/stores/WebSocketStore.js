@@ -68,6 +68,14 @@ export default class WebSocketStore {
         this.trackStore.start()
         break
       }
+      case 'shuffle': {
+        this.trackStore.updateShuffleMode(payload)
+        break
+      }
+      case 'repeat': {
+        this.trackStore.updateRepeatMode(payload)
+        break
+      }
       default: {
         console.log(`WebSocket message received, channel: ${channel}, payload: ${payload}`)
         break

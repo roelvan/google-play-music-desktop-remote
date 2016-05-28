@@ -5,8 +5,8 @@ export default class TrackStore {
   @observable artist = ''
   @observable album = ''
   @observable albumArt = ''
-  @observable shuffleStatus = ''
-  @observable repeatStatus = ''
+  @observable repeatMode = ''
+  @observable shuffleMode = ''
   @observable isPlaying = false
   @observable isStopped = true
   @observable currentTime = 0
@@ -26,6 +26,14 @@ export default class TrackStore {
   updateTime = (currentTime, totalTime) => {
     this.currentTime = currentTime
     this.totalTime = totalTime
+  }
+
+  updateRepeatMode = (repeatMode) => {
+    this.repeatMode = repeatMode
+  }
+
+  updateShuffleMode = (shuffleMode) => {
+    this.shuffleMode = shuffleMode
   }
 
   start = () => {

@@ -60,7 +60,7 @@ export default class HomeScreen extends Component {
 
   render () {
     const { title, artist, album, albumArt, isPlaying,
-      isStopped, currentTime, totalTime } = this.props.trackStore
+      isStopped, currentTime, totalTime, repeatMode, shuffleMode } = this.props.trackStore
     return (
       <View style={styles.container}>
         <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
@@ -78,6 +78,8 @@ export default class HomeScreen extends Component {
             <ControlBar
               isPlaying={isPlaying}
               isStopped={isStopped}
+              repeatMode={repeatMode}
+              shuffleMode={shuffleMode}
               onPlayPress={this._handlePlayPress}
               onPrevPress={this._handlePrevPress}
               onNextPress={this._handleNextPress}
