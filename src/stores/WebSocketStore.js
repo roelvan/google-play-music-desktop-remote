@@ -1,7 +1,7 @@
 import { observable } from 'mobx'
 
-const TEST_IP_ADDRESS = '192.168.1.60'
-const TEST_PORT = 5672
+export const TEST_IP_ADDRESS = '192.168.1.60'
+export const TEST_PORT = 5672
 
 export default class WebSocketStore {
   trackStore
@@ -21,31 +21,28 @@ export default class WebSocketStore {
   connect = () => {
     this.isConnecting = true
     this.webSocket = new WebSocket(`ws://${this.ipAddress}:${this.port}`)
-    this.webSocket.onopen = this.onConnectionOpen
-    this.webSocket.onerror = this.onConnectioError
-    this.webSocket.onmessage = this.onMessage
-    this.webSocket.onclose = this.onConnectionClose
+    this.webSocket.onopen = this._onConnectionOpen
+    this.webSocket.onerror = this._onConnectioError
+    this.webSocket.onmessage = this._onMessage
+    this.webSocket.onclose = this._onConnectionClose
   }
 
-  onConnectionOpen = () => {
-    console.log('onConnectionOpen')
+  _onConnectionOpen = () => {
     this.isConnecting = false
     this.isConnected = true
   }
 
-  onConnectionError = (error) => {
-    console.log('onConnectionError', error)
+  _onConnectionError = (error) => {
     this.isConnecting = false
     this.isConnected = false
   }
 
-  onConnectionClose = () => {
-    console.log('onConnectionClose')
+  _onConnectionClose = () => {
     this.isConnecting = false
     this.isConnected = false
   }
 
-  onMessage = (msg) => {
+  _onMessage = (msg) => {
     this.lastMessage = msg
     const { channel, payload } = JSON.parse(msg.data)
     switch (channel) {

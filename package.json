@@ -32,7 +32,8 @@
     "eslint-plugin-react": "^5.1.1",
     "mocha": "^2.5.3",
     "nyc": "^6.4.4",
-    "react-native-mock": "^0.2.2"
+    "react-native-mock": "^0.2.2",
+    "sinon": "^1.17.4"
   },
   "standard": {
     "parser": "babel-eslint",

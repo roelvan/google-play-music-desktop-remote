@@ -1,16 +1,11 @@
+/* eslint-disable no-unused-expressions */
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import TrackStore from '../../src/stores/TrackStore'
 
 describe('Track Store', () => {
-  let trackStore
-
-  beforeEach((done) => {
-    trackStore = new TrackStore()
-    done()
-  })
-
-  it('creates the store successfully', () => {
+  it('creates the store', () => {
+    const trackStore = new TrackStore()
     expect(trackStore.title).to.deep.equal('')
     expect(trackStore.artist).to.deep.equal('')
     expect(trackStore.album).to.deep.equal('')
@@ -23,7 +18,8 @@ describe('Track Store', () => {
     expect(trackStore.totalTime).to.deep.equal(0)
   })
 
-  it('changes the track successfully', () => {
+  it('changes the track', () => {
+    const trackStore = new TrackStore()
     trackStore.changeTrack('testTitle', 'testArtist', 'testAlbum', 'testAlbumArt')
     expect(trackStore.title).to.deep.equal('testTitle')
     expect(trackStore.artist).to.deep.equal('testArtist')
@@ -31,33 +27,39 @@ describe('Track Store', () => {
     expect(trackStore.albumArt).to.deep.equal('testAlbumArt')
   })
 
-  it('sets the playing status correctly', () => {
+  it('sets the playing status', () => {
+    const trackStore = new TrackStore()
     trackStore.setPlayingStatus(true)
     expect(trackStore.isPlaying).to.be.true
   })
 
-  it('updates the time correctly', () => {
+  it('updates the time', () => {
+    const trackStore = new TrackStore()
     trackStore.updateTime(2, 8)
     expect(trackStore.currentTime).to.deep.equal(2)
     expect(trackStore.totalTime).to.deep.equal(8)
   })
 
-  it('updates repeat mode correctly', () => {
+  it('updates repeat mode', () => {
+    const trackStore = new TrackStore()
     trackStore.updateRepeatMode('NO_REPEAT')
     expect(trackStore.repeatMode).to.deep.equal('NO_REPEAT')
   })
 
-  it('updates shuffle mode correctly', () => {
+  it('updates shuffle mode', () => {
+    const trackStore = new TrackStore()
     trackStore.updateShuffleMode('NO_SHUFFLE')
     expect(trackStore.shuffleMode).to.deep.equal('NO_SHUFFLE')
   })
 
-  it('starts the track successfully', () => {
+  it('starts the track', () => {
+    const trackStore = new TrackStore()
     trackStore.start()
     expect(trackStore.isStopped).to.deep.be.false
   })
 
-  it('stops the track successfully', () => {
+  it('stops the track', () => {
+    const trackStore = new TrackStore()
     trackStore.stop()
     expect(trackStore.isStopped).to.deep.be.true
   })
