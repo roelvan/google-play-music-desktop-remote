@@ -102,7 +102,7 @@ export default class WebSocketStore {
   }
 
   sendPrev = () => {
-    this._sendMessage({ namespace: 'playback', method: 'prev' })
+    this._sendMessage({ namespace: 'playback', method: 'rewind' })
   }
 
   sendNext = () => {
