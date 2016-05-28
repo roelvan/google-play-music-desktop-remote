@@ -56,6 +56,7 @@ export default class WebSocketStore {
   _onConnectionClose = () => {
     this.isConnecting = false
     this.isConnected = false
+    this.connect()
   }
 
   _onMessage = (msg) => {
