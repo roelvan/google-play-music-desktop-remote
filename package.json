@@ -6,7 +6,11 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "reset": "watchman watch-del-all && rm -rf node_modules/ && npm cache clean && npm prune && npm i",
     "generate-apk": "curl 'http://localhost:8081/index.android.bundle?platform=android' -dev=false -o 'android/app/src/main/assets/index.android.bundle' && android/gradlew assembleRelease -p android/",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "mocha --opts test/mocha.opts test/ --recursive",
+    "testwatch": "mocha --opts test/mocha.opts test/ --recursive --watch",
+    "coverage": "nyc mocha --opts test/mocha.opts test/ --recursive",
+    "lintest": "eslint src && mocha --opts test/mocha.opts test/ --recursive"
   },
   "dependencies": {
     "babel-eslint": "^6.0.4",
@@ -20,11 +24,15 @@
     "react-native-zeroconf": "^0.3.1"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "eslint": "^2.10.2",
     "eslint-config-mostaza": "^1.0.3",
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.2.2",
-    "eslint-plugin-react": "^5.1.1"
+    "eslint-plugin-react": "^5.1.1",
+    "mocha": "^2.5.3",
+    "nyc": "^6.4.4",
+    "react-native-mock": "^0.2.2"
   },
   "standard": {
     "parser": "babel-eslint",
