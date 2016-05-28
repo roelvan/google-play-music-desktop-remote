@@ -1,15 +1,17 @@
 import React, { PropTypes } from 'react'
 import { StyleSheet } from 'react-native'
-import { MKSlider } from 'react-native-material-kit'
+import { observer } from 'mobx-react/native'
+import CustomSlider from './CustomSlider'
 import colors from '../theme/colors'
 import metrics from '../theme/metrics'
 
+@observer
 export default class ProgressSlider extends React.Component {
   static propTypes = {
     min: PropTypes.number,
     max: PropTypes.number,
     value: PropTypes.number,
-    onTouchUp: PropTypes.func
+    onValueChange: PropTypes.func
   }
 
   constructor (props) {
@@ -19,34 +21,34 @@ export default class ProgressSlider extends React.Component {
     }
   }
 
-  componentDidUpdate (prevProps) {
-    if (prevProps.value !== this.props.value) this.setValue(this.props.value)
+  shouldComponentUpdate (nextProps) {
+    if (nextProps.value === this.props.value || this.state.isTouched) {
+      return false
+    }
+    this.refs.slider.value = nextProps.value
+    return true
   }
 
-  setValue = (value) => {
-    if (!this.state.isTouched) this.refs.slider.value = value
-  }
-
-  _handleTouchDown = (value) => {
+  _handlePress = (value) => {
     this.setState({ isTouched: true })
   }
 
-  _handleTouchUp = (value) => {
+  _handleConfirm = (value) => {
     this.setState({ isTouched: false })
-    this.props.onTouchUp(value)
+    this.props.onValueChange(value)
   }
 
   render () {
     const { min, max } = this.props
     return (
-      <MKSlider
+      <CustomSlider
         ref={'slider'}
         style={styles.slider}
         min={min}
         max={max}
         trackSize={6}
-        onTouchDown={this._handleTouchDown}
-        onTouchUp={this._handleTouchUp}
+        onPress={this._handlePress}
+        onConfirm={this._handleConfirm}
         upperTrackColor={colors.WHITE}
         lowerTrackColor={colors.ORANGE}
       />

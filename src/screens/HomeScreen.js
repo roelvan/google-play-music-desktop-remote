@@ -90,7 +90,7 @@ export default class HomeScreen extends Component {
             min={0}
             max={totalTime}
             value={currentTime}
-            onTouchUp={this._handleProgressBarTouch}
+            onValueChange={this._handleProgressBarTouch}
           />
         </View>
       </View>
