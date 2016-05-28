@@ -1,6 +1,7 @@
 # Google Play Music Desktop Remote (wip)
 
 [![Join the chat at https://gitter.im/GPMDP/google-play-music-desktop-remote](https://badges.gitter.im/GPMDP/google-play-music-desktop-remote.svg)](https://gitter.im/GPMDP/google-play-music-desktop-remote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 An application for remote controlling the awesome [Google Play Music Desktop](https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-).   
 Built with:
 - React-Native
@@ -9,6 +10,8 @@ Built with:
 - [React-Native Material Kit](https://github.com/xinthink/react-native-material-kit/) for the material design theme
 <br />
 <br />
+
+Beta Builds are auto-published [here](https://rink.hockeyapp.net/apps/298cac3d3c4b46898a6138af25808b7c)
 
 <p align="center">
   <img align="center" src="https://raw.githubusercontent.com/mmazzarolo/google-play-music-desktop-remote/master/extras/emulator-screen.png" width="320">
