@@ -1,4 +1,4 @@
-package com.googleplaymusicdesktopremote;
+package com.googleplaymusicdesktopremote.volume;
 
 import android.view.KeyEvent;
 

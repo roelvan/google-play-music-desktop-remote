@@ -1,4 +1,4 @@
-package com.googleplaymusicdesktopremote;
+package com.googleplaymusicdesktopremote.volume;
 
 import android.view.KeyEvent;
 
@@ -10,7 +10,7 @@ import com.facebook.react.uimanager.ViewManager;
 
 import java.util.*;
 
-class VolumePackage implements ReactPackage {
+public class VolumePackage implements ReactPackage {
 
   private VolumeModule vM = null;
 

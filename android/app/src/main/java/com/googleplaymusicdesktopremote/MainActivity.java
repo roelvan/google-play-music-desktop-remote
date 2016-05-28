@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
+import com.googleplaymusicdesktopremote.volume.VolumePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.balthazargronon.react.ZeroconfReactPackage;
 
