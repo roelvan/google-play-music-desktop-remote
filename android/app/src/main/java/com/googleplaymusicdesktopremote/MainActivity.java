@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.googleplaymusicdesktopremote.volume.VolumePackage;
+import com.googleplaymusicdesktopremote.device.DevicePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.balthazargronon.react.ZeroconfReactPackage;
 
@@ -47,6 +48,7 @@ public class MainActivity extends ReactActivity {
             new ZeroconfReactPackage(),
             new ReactMaterialKitPackage(),
             new VectorIconsPackage(),
+            new DevicePackage(),
             vP
         );
     }
