@@ -1,5 +1,6 @@
 import { observable } from 'mobx'
-import { DeviceEventEmitter } from 'react-native'
+import { DeviceEventEmitter, NativeModules } from 'react-native'
+const { DeviceInfo }  = NativeModules
 
 export const TEST_IP_ADDRESS = '192.168.1.60'
 export const TEST_PORT = 5672
@@ -46,6 +47,10 @@ export default class WebSocketStore {
   _onConnectionOpen = () => {
     this.isConnecting = false
     this.isConnected = true
+    DeviceInfo.getDeviceName()
+      .then((deviceName) => {
+        this._sendMessage({ namespace: 'connect', method: 'connect', arguments: [deviceName] })
+      })
   }
 
   _onConnectionError = (error) => {
