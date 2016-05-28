@@ -1,4 +1,5 @@
 import { observable } from 'mobx'
+import { DeviceEventEmitter } from 'react-native';
 
 export const TEST_IP_ADDRESS = '192.168.1.60'
 export const TEST_PORT = 5672
@@ -16,6 +17,21 @@ export default class WebSocketStore {
     this.trackStore = trackStore
     this.ipAddress = ipAddress
     this.port = port
+
+    this.hook()
+  }
+
+  hook = () => {
+    DeviceEventEmitter.addListener('volume_up', () => {
+      if (this.isConnected) {
+        this._sendMessage({ namespace: 'volume', method: 'increaseVolume' })
+      }
+    })
+    DeviceEventEmitter.addListener('volume_down', () => {
+      if (this.isConnected) {
+        this._sendMessage({ namespace: 'volume', method: 'decreaseVolume' })
+      }
+    })
   }
 
   connect = () => {

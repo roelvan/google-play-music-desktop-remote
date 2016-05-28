@@ -1,5 +1,7 @@
 package com.googleplaymusicdesktopremote;
 
+import android.view.KeyEvent;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -12,6 +14,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.balthazargronon.react.ZeroconfReactPackage;
 
 public class MainActivity extends ReactActivity {
+    private VolumePackage vP = null;
 
     /**
      * Returns the name of the main component registered from JavaScript.
@@ -37,11 +40,18 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected List<ReactPackage> getPackages() {
+        vP = new VolumePackage();
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new ZeroconfReactPackage(),
             new ReactMaterialKitPackage(),
-            new VectorIconsPackage()
+            new VectorIconsPackage(),
+            vP
         );
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return vP != null && vP.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
     }
 }
