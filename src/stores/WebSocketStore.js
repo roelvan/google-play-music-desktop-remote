@@ -1,5 +1,5 @@
 import { observable } from 'mobx'
-import { DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter } from 'react-native'
 
 export const TEST_IP_ADDRESS = '192.168.1.60'
 export const TEST_PORT = 5672
