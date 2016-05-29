@@ -76,6 +76,7 @@ export default class HomeScreen extends Component {
 
   _handlePlaylistNavigation = (playlist) => {
     return () => {
+      this.refs.drawer.closeDrawer()
       this.props.navigator.push({ name: 'playlist', playlist, })
     }
   }
@@ -118,6 +119,7 @@ export default class HomeScreen extends Component {
     )
     return (
       <DrawerLayoutAndroid
+        ref="drawer"
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
         renderNavigationView={() => navigationView}
