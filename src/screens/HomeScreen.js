@@ -20,26 +20,13 @@ export default class HomeScreen extends Component {
     webSocketStore: PropTypes.object
   }
 
-  constructor (...args) {
-    super(...args)
-
-    this.state = {
-      badIP: false
-    }
-  }
-
   componentDidMount () {
     const { webSocketStore, settingsStore } = this.props
     webSocketStore.connect(settingsStore.IP_ADDRESS)
     this.CONNECTED_IP = settingsStore.IP_ADDRESS
 
     if (this.CONNECTED_IP === 'NOT_SET' && !this.state.badIP) {
-      setTimeout(() => {
-        this.setState({
-          badIP: true
-        })
-        this.props.navigator.push({ name: 'settings' })
-      }, 0)
+      this.props.navigator.push({ name: 'settings' })
     }
     // this.zeroconf = new Zeroconf()
     // this.zeroconf.scan(type = 'http', protocol = 'tcp', domain = 'local.')

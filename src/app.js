@@ -25,6 +25,7 @@ export default class App extends Component {
       loaded: false
     }
   }
+
   async componentDidMount () {
     await settingsStore.init()
     setTimeout(() => {
