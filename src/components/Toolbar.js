@@ -5,20 +5,47 @@ import colors from '../theme/colors'
 
 export default class Toolbar extends Component {
   static propTypes = {
+    navigator: PropTypes.object,
     title: PropTypes.string,
-    onLeftPress: PropTypes.func,
+    settingsMenu: PropTypes.bool,
     showDrawer: PropTypes.bool
   }
 
+  _actionSelected = (actionIndex) => {
+    switch (actionIndex) {
+      case 0: {
+        this.props.navigator.push({
+          name: 'settings'
+        })
+        break
+      }
+      default: {
+        break
+      }
+    }
+  }
+
+  _backButtonPressed = () => {
+    this.props.navigator.pop()
+  }
+
   render () {
-    const { title, onLeftPress } = this.props
+    const { title, settingsMenu } = this.props
+    const actions = [
+      {
+        title: 'Settings'
+      }
+    ]
+
     return (
       <Icon.ToolbarAndroid
         navIconName={'md-arrow-back'}
-        onIconClicked={onLeftPress}
+        onIconClicked={this._backButtonPressed}
         style={styles.toolbar}
         titleColor={'white'}
         title={title}
+        actions={(settingsMenu ? actions : null)}
+        onActionSelected={this._actionSelected}
       />
     )
   }

@@ -31,14 +31,14 @@ describe('WebSocket Store - Connection', () => {
 
   it('connects', () => {
     const webSocketStore = new WebSocketStore()
-    webSocketStore.connect()
+    webSocketStore.connect(TEST_IP_ADDRESS)
     expect(webSocketStore.isConnecting).to.be.true
     expect(webSocketStore.webSocket.ip).to.deep.equal(`ws://${TEST_IP_ADDRESS}:${TEST_PORT}`)
   })
 
   it('opens connection', () => {
     const webSocketStore = new WebSocketStore()
-    webSocketStore.connect()
+    webSocketStore.connect(TEST_IP_ADDRESS)
     webSocketStore._onConnectionOpen()
     expect(webSocketStore.isConnecting).to.be.false
     expect(webSocketStore.isConnected).to.be.true
@@ -46,7 +46,7 @@ describe('WebSocket Store - Connection', () => {
 
   it('handles a connection error', () => {
     const webSocketStore = new WebSocketStore()
-    webSocketStore.connect()
+    webSocketStore.connect(TEST_IP_ADDRESS)
     webSocketStore._onConnectionError()
     expect(webSocketStore.isConnecting).to.be.false
     expect(webSocketStore.isConnected).to.be.false
@@ -54,7 +54,7 @@ describe('WebSocket Store - Connection', () => {
 
   it('closes connection', () => {
     const webSocketStore = new WebSocketStore()
-    webSocketStore.connect()
+    webSocketStore.connect(TEST_IP_ADDRESS)
     webSocketStore._onConnectionClose()
     expect(webSocketStore.isConnecting).to.be.true
     expect(webSocketStore.isConnected).to.be.false
@@ -74,7 +74,7 @@ describe('WebSocket Store - Receive messages', () => {
     trackStore.updateRepeatMode = sinon.spy()
     trackStore.start = sinon.spy()
     webSocketStore = new WebSocketStore(trackStore)
-    webSocketStore.connect()
+    webSocketStore.connect(TEST_IP_ADDRESS)
     webSocketStore._onConnectionOpen()
     done()
   })
@@ -145,7 +145,7 @@ describe('WebSocket Store - Send messages', () => {
     trackStore = new TrackStore()
     trackStore.stop = sinon.spy()
     webSocketStore = new WebSocketStore(trackStore)
-    webSocketStore.connect()
+    webSocketStore.connect(TEST_IP_ADDRESS)
     webSocketStore._onConnectionOpen()
     done()
   })

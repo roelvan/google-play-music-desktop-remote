@@ -14,13 +14,33 @@ const theme = getTheme()
 @observer
 export default class HomeScreen extends Component {
   static propTypes = {
+    navigator: PropTypes.object,
+    settingsStore: PropTypes.object,
     trackStore: PropTypes.object,
     webSocketStore: PropTypes.object
   }
 
+  constructor (...args) {
+    super(...args)
+
+    this.state = {
+      badIP: false
+    }
+  }
+
   componentDidMount () {
-    const { webSocketStore } = this.props
-    webSocketStore.connect()
+    const { webSocketStore, settingsStore } = this.props
+    webSocketStore.connect(settingsStore.IP_ADDRESS)
+    this.CONNECTED_IP = settingsStore.IP_ADDRESS
+
+    if (this.CONNECTED_IP === 'NOT_SET' && !this.state.badIP) {
+      setTimeout(() => {
+        this.setState({
+          badIP: true
+        })
+        this.props.navigator.push({ name: 'settings' })
+      }, 0)
+    }
     // this.zeroconf = new Zeroconf()
     // this.zeroconf.scan(type = 'http', protocol = 'tcp', domain = 'local.')
     // this.zeroconf.scan('GPMDP')
@@ -28,6 +48,15 @@ export default class HomeScreen extends Component {
     // this.zeroconf.on('found', () => console.log('found.'))
     // this.zeroconf.on('resolved', () => console.log('resolved.'))
     // this.zeroconf.on('error', () => console.log('error.'))
+  }
+
+  componentDidUpdate () {
+    const { webSocketStore, settingsStore } = this.props
+    if (this.CONNECTED_IP !== settingsStore.IP_ADDRESS) {
+      webSocketStore.disconnect()
+      webSocketStore.connect(settingsStore.IP_ADDRESS)
+      this.CONNECTED_IP = settingsStore.IP_ADDRESS
+    }
   }
 
   _handlePlayPress = () => {
@@ -64,7 +93,7 @@ export default class HomeScreen extends Component {
     return (
       <View style={styles.container}>
         <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
-        <Toolbar title={'Home'} />
+        <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu />
         <View style={styles.content}>
           <View style={{ flex: 1, alignItems: 'center' }}>
             <TrackCard

@@ -1,6 +1,6 @@
 import { observable } from 'mobx'
 import { DeviceEventEmitter, NativeModules } from 'react-native'
-const { DeviceInfo }  = NativeModules
+const { DeviceInfo } = NativeModules
 
 export const TEST_IP_ADDRESS = '192.168.1.60'
 export const TEST_PORT = 5672
@@ -13,10 +13,10 @@ export default class WebSocketStore {
   @observable isConnecting = false
   @observable isConnected = false
   @observable lastMessage = null
+  shouldReconnect = false
 
-  constructor (trackStore, ipAddress = TEST_IP_ADDRESS, port = TEST_PORT) {
+  constructor (trackStore, port = TEST_PORT) {
     this.trackStore = trackStore
-    this.ipAddress = ipAddress
     this.port = port
 
     this.hook()
@@ -35,13 +35,25 @@ export default class WebSocketStore {
     })
   }
 
-  connect = () => {
+  connect (ip) {
     this.isConnecting = true
-    this.webSocket = new WebSocket(`ws://${this.ipAddress}:${this.port}`)
+    try {
+      this.ipAddress = ip
+      this.webSocket = new WebSocket(`ws://${this.ipAddress}:${this.port}`)
+      this.shouldReconnect = true
+    } catch (err) {
+      this.disconnect()
+    }
     this.webSocket.onopen = this._onConnectionOpen
     this.webSocket.onerror = this._onConnectioError
     this.webSocket.onmessage = this._onMessage
     this.webSocket.onclose = this._onConnectionClose
+  }
+
+  disconnect = () => {
+    this.shouldReconnect = false
+    this.webSocket.close()
+    this.webSocket = null
   }
 
   _onConnectionOpen = () => {
@@ -61,7 +73,9 @@ export default class WebSocketStore {
   _onConnectionClose = () => {
     this.isConnecting = false
     this.isConnected = false
-    this.connect()
+    if (this.shouldReconnect) {
+      this.connect(this.ipAddress)
+    }
   }
 
   _onMessage = (msg) => {
@@ -136,7 +150,9 @@ export default class WebSocketStore {
   }
 
   _sendMessage = (msg) => {
-    this.webSocket.send(JSON.stringify(msg))
+    if (this.webSocket.readyState === 1) {
+      this.webSocket.send(JSON.stringify(msg))
+    }
   }
 
 }
