@@ -1,12 +1,12 @@
 import { observable } from 'mobx'
 
 export default class TrackStore {
-  @observable title = ''
-  @observable artist = ''
-  @observable album = ''
-  @observable albumArt = ''
-  @observable repeatMode = ''
-  @observable shuffleMode = ''
+  @observable title = null
+  @observable artist = null
+  @observable album = null
+  @observable albumArt = null
+  @observable repeatMode = 'NO_REPEAT'
+  @observable shuffleMode = 'NO_SHUFFLE'
   @observable isPlaying = false
   @observable isStopped = true
   @observable currentTime = 0
@@ -44,4 +44,16 @@ export default class TrackStore {
     this.isStopped = true
   }
 
+  reset = () => {
+    this.title = null
+    this.artist = null
+    this.album = null
+    this.albumArt = null
+    this.repeatMode = 'NO_REPEAT'
+    this.shuffleMode = 'NO_SHUFFLE'
+    this.isPlaying = false
+    this.isStopped = true
+    this.currentTime = 0
+    this.totalTime = 0
+  }
 }

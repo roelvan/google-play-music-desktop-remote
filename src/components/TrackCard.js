@@ -20,7 +20,7 @@ const TrackCard = ({ title, artist, album, albumArt }) => {
     resizeMode = 'contain'
   } else {
     art = {
-      uri: art === '' ? placeholder : art
+      uri: art === null ? placeholder : art
     }
   }
 
@@ -34,10 +34,10 @@ const TrackCard = ({ title, artist, album, albumArt }) => {
       </View>
       <View style={{ margin: 15 }}>
         <Text style={[theme.cardContentStyle, styles.titleText]}>
-          {title}
+          {title || 'No song is currently playing'}
         </Text>
         <Text style={[theme.cardContentStyle, styles.subText]}>
-          {artist}{album === '' || artist === '' ? '' : ' - '}{album}
+          {artist}{!album || !artist ? '' : ' - '}{album}
         </Text>
       </View>
     </View>

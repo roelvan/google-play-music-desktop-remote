@@ -73,6 +73,10 @@ export default class WebSocketStore {
   _onConnectionClose = () => {
     this.isConnecting = false
     this.isConnected = false
+
+    // Reset the trackStore
+    this.trackStore.reset()
+
     if (this.shouldReconnect) {
       this.connect(this.ipAddress)
     }
