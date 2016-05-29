@@ -25,7 +25,7 @@ export default class HomeScreen extends Component {
     webSocketStore.connect(settingsStore.IP_ADDRESS)
     this.CONNECTED_IP = settingsStore.IP_ADDRESS
 
-    if (this.CONNECTED_IP === 'NOT_SET' && !this.state.badIP) {
+    if (this.CONNECTED_IP === 'NOT_SET') {
       this.props.navigator.push({ name: 'settings' })
     }
     // this.zeroconf = new Zeroconf()
