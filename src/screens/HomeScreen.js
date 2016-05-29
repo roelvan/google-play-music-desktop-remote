@@ -88,8 +88,15 @@ export default class HomeScreen extends Component {
   }
 
   render () {
-    const { title, artist, album, albumArt, isPlaying,
+    let { title, artist, album, albumArt, isPlaying,
       isStopped, currentTime, totalTime, repeatMode, shuffleMode } = this.props.trackStore
+    const { isConnected } = this.props.webSocketStore
+    if (!isConnected) {
+      title = 'Not Connected'
+      artist = 'Check your settings'
+      album = ''
+      albumArt = 'NOT_CONNECTED'
+    }
     return (
       <View style={styles.container}>
         <StatusBar animated backgroundColor={colors.ORANGE_DARK} />

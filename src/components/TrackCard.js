@@ -8,23 +8,41 @@ const theme = getTheme()
 
 const placeholder = 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg'
 
-const TrackCard = ({ title, artist, album, albumArt }) => (
-  <View style={[theme.cardStyle, styles.container]}>
-    <Image
-      source={{ uri: albumArt === '' ? placeholder : albumArt }}
-      resizeMode={'cover'}
-      style={{ flex: 1, margin: -2 }}
-    />
-    <View style={{ margin: 15 }}>
-      <Text style={[theme.cardContentStyle, styles.titleText]}>
-        {title}
-      </Text>
-      <Text style={[theme.cardContentStyle, styles.subText]}>
-        {artist} - {album}
-      </Text>
+const TrackCard = ({ title, artist, album, albumArt }) => {
+  let art = albumArt
+  let imageWidth = metrics.DEVICE_WIDTH * 0.7
+  let imageMargin = 0
+  let resizeMode = 'cover'
+  if (art === 'NOT_CONNECTED') {
+    art = require('./img/cloud-off.png') // eslint-disable-line
+    imageWidth -= 40
+    imageMargin = 20
+    resizeMode = 'contain'
+  } else {
+    art = {
+      uri: art === '' ? placeholder : art
+    }
+  }
+
+  return (
+    <View style={[theme.cardStyle, styles.container]}>
+      <View style={{ flex: 1, margin: imageMargin }}>
+        <Image
+          source={art}
+          style={{ flex: 1, margin: -2, resizeMode, width: imageWidth }}
+        />
+      </View>
+      <View style={{ margin: 15 }}>
+        <Text style={[theme.cardContentStyle, styles.titleText]}>
+          {title}
+        </Text>
+        <Text style={[theme.cardContentStyle, styles.subText]}>
+          {artist}{album === '' || artist === '' ? '' : ' - '}{album}
+        </Text>
+      </View>
     </View>
-  </View>
-)
+  )
+}
 
 TrackCard.propTypes = {
   title: PropTypes.string,
