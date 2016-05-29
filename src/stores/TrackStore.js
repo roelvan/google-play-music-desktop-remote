@@ -1,4 +1,5 @@
 import { observable } from 'mobx'
+import { ListView } from 'react-native'
 
 export default class TrackStore {
   @observable title = null
@@ -11,6 +12,8 @@ export default class TrackStore {
   @observable isStopped = true
   @observable currentTime = 0
   @observable totalTime = 0
+  @observable playlists = []
+  @observable playlistsDataStore = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) })
 
   changeTrack = (title, artist, album, albumArt) => {
     this.title = title
@@ -34,6 +37,12 @@ export default class TrackStore {
 
   updateShuffleMode = (shuffleMode) => {
     this.shuffleMode = shuffleMode
+  }
+
+  updatePlaylists = (playlists) => {
+    const sortedPlaylists = playlists.sort((p1, p2) => p1.name.localeCompare(p2.name))
+    this.playlists = sortedPlaylists
+    this.playlistsDataStore = this.playlistsDataStore.cloneWithRows(sortedPlaylists)
   }
 
   start = () => {

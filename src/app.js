@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Navigator } from 'react-native'
 import { setTheme, MKColor } from 'react-native-material-kit'
 import HomeScreen from './screens/HomeScreen'
+import PlaylistScreen from './screens/PlaylistScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import SettingsStore from './stores/SettingsStore'
 import TrackStore from './stores/TrackStore'
@@ -42,6 +43,9 @@ export default class App extends Component {
         initialRoute={{ name: 'remote' }}
         renderScene={(route, navigator) => {
           switch (route.name) {
+            case 'playlist': {
+              return (<PlaylistScreen navigator={navigator} webSocketStore={webSocketStore} playlist={route.playlist} />)
+            }
             case 'settings': {
               return (<SettingsScreen navigator={navigator} settingsStore={settingsStore} />)
             }

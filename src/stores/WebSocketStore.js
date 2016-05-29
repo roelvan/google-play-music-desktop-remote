@@ -113,7 +113,12 @@ export default class WebSocketStore {
         this.trackStore.updateRepeatMode(payload)
         break
       }
+      case 'playlists': {
+        this.trackStore.updatePlaylists(payload)
+        break
+      }
       default: {
+        if (channel === 'lyrics') return
         console.log(`WebSocket message received, channel: ${channel}, payload: ${payload}`)
         break
       }
@@ -122,6 +127,10 @@ export default class WebSocketStore {
 
   sendPlay = () => {
     this._sendMessage({ namespace: 'playback', method: 'playPause' })
+  }
+
+  sendPlayPlaylistTrack = (playlist, track) => {
+    this._sendMessage({ namespace: 'playlists', method: 'playWithTrack', arguments: [playlist, track] })
   }
 
   sendPrev = () => {

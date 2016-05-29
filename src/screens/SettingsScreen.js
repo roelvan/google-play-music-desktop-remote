@@ -9,7 +9,7 @@ import colors from '../theme/colors'
 const theme = getTheme()
 
 @observer
-export default class HomeScreen extends Component {
+export default class SettingsScreen extends Component {
   static propTypes = {
     navigator: PropTypes.object,
     settingsStore: PropTypes.object

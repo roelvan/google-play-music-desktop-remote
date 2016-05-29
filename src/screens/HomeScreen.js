@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { StatusBar, StyleSheet, View } from 'react-native'
+import { DrawerLayoutAndroid, ListView, StatusBar, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
 import { getTheme } from 'react-native-material-kit'
 // import Zeroconf from 'react-native-zeroconf'
@@ -74,51 +74,89 @@ export default class HomeScreen extends Component {
     this.props.webSocketStore.sendSetTime(value)
   }
 
+  _handlePlaylistNavigation = (playlist) => {
+    return () => {
+      this.props.navigator.push({ name: 'playlist', playlist, })
+    }
+  }
+
   render () {
     let { title, artist, album, albumArt, isPlaying,
       isStopped, currentTime, totalTime, repeatMode, shuffleMode } = this.props.trackStore
+    const { playlistsDataStore } = this.props.trackStore
     const { isConnected } = this.props.webSocketStore
+
     if (!isConnected) {
       title = 'Not Connected'
       artist = 'Check your settings'
       album = ''
       albumArt = 'NOT_CONNECTED'
     }
+    const navigationView = (
+      <ListView
+        dataSource={playlistsDataStore}
+        renderHeader={() => (
+          <View style={styles.listItem}>
+            <Text style={{ fontWeight: 'bold', fontSize: 24 }}>Playlists</Text>
+          </View>
+        )}
+        renderRow={(playlist) => {
+          return (
+            <TouchableNativeFeedback
+              onPress={this._handlePlaylistNavigation(playlist)}
+              background={TouchableNativeFeedback.Ripple(colors.GREY_LIGHT, false)}
+            >
+              <View>
+                <View style={styles.listItem}>
+                  <Text>{playlist.name}</Text>
+                </View>
+              </View>
+            </TouchableNativeFeedback>
+          )
+        }}
+      />
+    )
     return (
-      <View style={styles.container}>
-        <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
-        <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu />
-        <View style={styles.content}>
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <TrackCard
-              title={title}
-              artist={artist}
-              album={album}
-              albumArt={albumArt}
+      <DrawerLayoutAndroid
+        drawerWidth={300}
+        drawerPosition={DrawerLayoutAndroid.positions.Left}
+        renderNavigationView={() => navigationView}
+      >
+        <View style={styles.container}>
+          <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
+          <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu />
+          <View style={styles.content}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <TrackCard
+                title={title}
+                artist={artist}
+                album={album}
+                albumArt={albumArt}
+              />
+            </View>
+            <View style={[theme.cardStyle, styles.controlBar]}>
+              <ControlBar
+                isPlaying={isPlaying}
+                isStopped={isStopped}
+                repeatMode={repeatMode}
+                shuffleMode={shuffleMode}
+                onPlayPress={this._handlePlayPress}
+                onPrevPress={this._handlePrevPress}
+                onNextPress={this._handleNextPress}
+                onShufflePress={this._handleShufflePress}
+                onRepeatPress={this._handleRepeatPress}
+              />
+            </View>
+            <ProgressSlider
+              ref={'progressSlider'}
+              min={0}
+              max={totalTime}
+              value={currentTime}
+              onValueChange={this._handleProgressBarTouch}
             />
           </View>
-          <View style={[theme.cardStyle, styles.controlBar]}>
-            <ControlBar
-              isPlaying={isPlaying}
-              isStopped={isStopped}
-              repeatMode={repeatMode}
-              shuffleMode={shuffleMode}
-              onPlayPress={this._handlePlayPress}
-              onPrevPress={this._handlePrevPress}
-              onNextPress={this._handleNextPress}
-              onShufflePress={this._handleShufflePress}
-              onRepeatPress={this._handleRepeatPress}
-            />
-          </View>
-          <ProgressSlider
-            ref={'progressSlider'}
-            min={0}
-            max={totalTime}
-            value={currentTime}
-            onValueChange={this._handleProgressBarTouch}
-          />
         </View>
-      </View>
+      </DrawerLayoutAndroid>
     )
   }
 }
@@ -136,5 +174,8 @@ const styles = StyleSheet.create({
     flex: 0,
     height: 100,
     elevation: 4
+  },
+  listItem: {
+    margin: 12,
   }
 })
