@@ -49,7 +49,7 @@ export default class ProgressSlider extends React.Component {
         trackSize={6}
         onPress={this._handlePress}
         onConfirm={this._handleConfirm}
-        upperTrackColor={colors.WHITE}
+        upperTrackColor="rgba(0, 0, 0, 0)"
         lowerTrackColor={colors.ORANGE}
       />
     )
@@ -58,12 +58,7 @@ export default class ProgressSlider extends React.Component {
 
 const styles = StyleSheet.create({
   slider: {
-    position: 'absolute',
-    bottom: 82,
-    width: metrics.DEVICE_WIDTH + 30,
-    marginLeft: -15,
-    marginRight: -15,
-    left: 0,
-    elevation: 9
+    marginLeft: -18,
+    marginRight: -18
   }
 })

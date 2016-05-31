@@ -10,7 +10,6 @@ export default class CustomSlider extends Slider {
   }
 
   _onTouchEvent(evt) {
-    console.log('eccomi')
     switch (evt.type) {
       case 'TOUCH_DOWN':
         this.props.onPress(); // !!!

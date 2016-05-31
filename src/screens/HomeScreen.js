@@ -1,15 +1,13 @@
 import React, { Component, PropTypes } from 'react'
-import { DrawerLayoutAndroid, ListView, StatusBar, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
+import { Animated, DrawerLayoutAndroid, DeviceEventEmitter, Image, ListView, NativeModules, StatusBar, StyleSheet, Text, TouchableNativeFeedback, TouchableWithoutFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
-import { getTheme } from 'react-native-material-kit'
 import Zeroconf from 'react-native-zeroconf'
-import TrackCard from '../components/TrackCard'
 import ControlBar from '../components/ControlBar'
 import ProgressSlider from '../components/ProgressSlider'
 import Toolbar from '../components/Toolbar'
 import colors from '../theme/colors'
 
-const theme = getTheme()
+const { DeviceInfo } = NativeModules
 
 @observer
 export default class HomeScreen extends Component {
@@ -18,6 +16,21 @@ export default class HomeScreen extends Component {
     settingsStore: PropTypes.object,
     trackStore: PropTypes.object,
     webSocketStore: PropTypes.object
+  }
+
+  constructor (...args) {
+    super(...args)
+
+    this.state = {
+      bouncing: false,
+      bounceDownValue: new Animated.Value(0),
+      bounceUpValue: new Animated.Value(0),
+      orientation: 'PORTRAIT'
+    }
+    DeviceInfo.getDeviceOrientation()
+      .then((o) => this.setState({
+        orientation: o === 1 ? 'PORTRAIT' : 'LANDSCAPE'
+      }))
   }
 
   componentDidMount () {
@@ -37,6 +50,12 @@ export default class HomeScreen extends Component {
       }
     })
     this.zeroconf.on('error', () => console.log('error.'))
+
+    DeviceEventEmitter.addListener('orientation', (data) => {
+      this.setState({
+        orientation: data.orientation
+      })
+    })
   }
 
   componentDidUpdate () {
@@ -46,6 +65,26 @@ export default class HomeScreen extends Component {
       webSocketStore.connect(settingsStore.IP_ADDRESS)
       this.CONNECTED_IP = settingsStore.IP_ADDRESS
     }
+  }
+
+  _imageTap = () => {
+    this.setState({
+      bouncing: !this.state.bouncing
+    })
+    Animated.timing(
+      this.state.bounceDownValue,
+      {
+        toValue: this.state.bouncing ? 0 : 120,
+        duration: 400
+      }
+    ).start()
+    Animated.timing(
+      this.state.bounceUpValue,
+      {
+        toValue: this.state.bouncing ? 0 : -60,
+        duration: 400
+      }
+    ).start()
   }
 
   _handlePlayPress = () => {
@@ -122,6 +161,16 @@ export default class HomeScreen extends Component {
         }}
       />
     )
+
+    let art = albumArt
+    if (art === 'NOT_CONNECTED') {
+      art = require('../components/img/cloud-off.png') // eslint-disable-line
+    } else {
+      art = {
+        uri: art === null ? 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' : `${art}=s1000-c-e1200`
+      }
+    }
+
     return (
       <DrawerLayoutAndroid
         ref="drawer"
@@ -131,20 +180,44 @@ export default class HomeScreen extends Component {
       >
         <View style={styles.container}>
           <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
-          <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
+          <Animated.View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              elevation: 4,
+              transform: [{ translateY: this.state.bounceUpValue }]
+            }}
+          >
+            <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
+          </Animated.View>
           <View style={styles.content}>
             <View style={{ flex: 1, alignItems: 'center' }}>
-              <TrackCard
-                title={title}
-                artist={artist}
-                album={album}
-                albumArt={albumArt}
-              />
+              <TouchableWithoutFeedback onPress={this._imageTap}>
+                <Image
+                  source={art}
+                  style={{
+                    flex: 1,
+                    resizeMode: 'cover',
+                    alignSelf: 'stretch',
+                    top: 0
+                  }}
+                />
+              </TouchableWithoutFeedback>
             </View>
-            <View style={[theme.cardStyle, styles.controlBar]}>
+            <Animated.View
+              style={[styles.controlBar, {
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0
+              }, { transform: [{ translateY: this.state.bounceDownValue }] }]}
+            >
               <ControlBar
                 isPlaying={isPlaying}
                 isStopped={isStopped}
+                landscape={this.state.orientation === 'LANDSCAPE'}
                 repeatMode={repeatMode}
                 shuffleMode={shuffleMode}
                 onPlayPress={this._handlePlayPress}
@@ -153,14 +226,25 @@ export default class HomeScreen extends Component {
                 onShufflePress={this._handleShufflePress}
                 onRepeatPress={this._handleRepeatPress}
               />
-            </View>
-            <ProgressSlider
-              ref={'progressSlider'}
-              min={0}
-              max={totalTime}
-              value={currentTime}
-              onValueChange={this._handleProgressBarTouch}
-            />
+            </Animated.View>
+            <Animated.View
+              style={{
+                position: 'absolute',
+                bottom: this.state.orientation === 'LANDSCAPE' ? 52 : 85,
+                left: 0,
+                right: 0,
+                elevation: 9,
+                transform: [{ translateY: this.state.bounceDownValue }]
+              }}
+            >
+              <ProgressSlider
+                ref={'progressSlider'}
+                min={0}
+                max={totalTime}
+                value={currentTime}
+                onValueChange={this._handleProgressBarTouch}
+              />
+            </Animated.View>
           </View>
         </View>
       </DrawerLayoutAndroid>
@@ -175,14 +259,15 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    backgroundColor: colors.GREY_LIGHTER
+    backgroundColor: colors.GREY_LIGHTER,
+    alignItems: 'stretch'
   },
   controlBar: {
     flex: 0,
-    height: 100,
+    height: null,
     elevation: 4
   },
   listItem: {
-    margin: 12,
+    margin: 12
   }
 })

@@ -1,14 +1,18 @@
 import React, { PropTypes } from 'react'
 import { StyleSheet, View } from 'react-native'
+import { getTheme } from 'react-native-material-kit'
 import IconMaterial from 'react-native-vector-icons/MaterialIcons'
 import CircleButton from './CircleButton'
 import PlayPauseButton from './PlayPauseButton'
 import colors from '../theme/colors'
 
+const theme = getTheme()
+
 export default class ControlBar extends React.Component {
   static propTypes = {
     isPlaying: PropTypes.bool,
     isStopped: PropTypes.bool,
+    landscape: PropTypes.bool,
     repeatMode: PropTypes.string,
     shuffleMode: PropTypes.string,
     onPlayPress: PropTypes.func,
@@ -24,7 +28,7 @@ export default class ControlBar extends React.Component {
   }
 
   render = () => {
-    const { onPlayPress, onPrevPress, onNextPress, onRepeatPress, onShufflePress, isPlaying, isStopped, repeatMode, shuffleMode } = this.props
+    const { landscape, onPlayPress, onPrevPress, onNextPress, onRepeatPress, onShufflePress, isPlaying, isStopped, repeatMode, shuffleMode } = this.props
 
     let repeatColor = colors.GREY_DARK
     let shuffleColor = colors.GREY_DARK
@@ -34,26 +38,26 @@ export default class ControlBar extends React.Component {
     if (shuffleMode !== 'NO_SHUFFLE') {
       shuffleColor = colors.ORANGE
     }
-    const repeatIcon = <IconMaterial name={repeatMode === 'SINGLE_REPEAT' ? 'repeat-one' : 'repeat'} size={26} color={repeatColor} />
-    const prevIcon = <IconMaterial name={'skip-previous'} size={26} color={colors.GREY_DARK} />
-    const nextIcon = <IconMaterial name={'skip-next'} size={26} color={colors.GREY_DARK} />
-    const shuffleIcon = <IconMaterial name={'shuffle'} size={26} color={shuffleColor} />
+    const repeatIcon = <IconMaterial name={repeatMode === 'SINGLE_REPEAT' ? 'repeat-one' : 'repeat'} size={landscape ? 20 : 26} color={repeatColor} />
+    const prevIcon = <IconMaterial name={'skip-previous'} size={landscape ? 20 : 26} color={colors.GREY_DARK} />
+    const nextIcon = <IconMaterial name={'skip-next'} size={landscape ? 20 : 26} color={colors.GREY_DARK} />
+    const shuffleIcon = <IconMaterial name={'shuffle'} size={landscape ? 20 : 26} color={shuffleColor} />
 
     return (
-      <View style={styles.container}>
-        <CircleButton onPress={onRepeatPress} size={42}>
+      <View style={[theme.cardStyle, landscape ? styles.landscapeContainer : styles.container]}>
+        <CircleButton onPress={onRepeatPress} size={landscape ? 32 : 42}>
           {repeatIcon}
         </CircleButton>
-        <CircleButton onPress={onPrevPress} size={42}>
+        <CircleButton onPress={onPrevPress} size={landscape ? 32 : 42}>
           {prevIcon}
         </CircleButton>
-        <CircleButton onPress={onPlayPress} size={78}>
-          <PlayPauseButton isPlaying={isPlaying} isStopped={isStopped} />
+        <CircleButton onPress={onPlayPress} size={landscape ? 55 : 84}>
+          <PlayPauseButton isPlaying={isPlaying} isStopped={isStopped} landscape={landscape} />
         </CircleButton>
-        <CircleButton onPress={onNextPress} size={42}>
+        <CircleButton onPress={onNextPress} size={landscape ? 32 : 42}>
           {nextIcon}
         </CircleButton>
-        <CircleButton onPress={onShufflePress} size={42}>
+        <CircleButton onPress={onShufflePress} size={landscape ? 32 : 42}>
           {shuffleIcon}
         </CircleButton>
       </View>
@@ -67,6 +71,15 @@ const styles = StyleSheet.create({
     height: 100,
     elevation: 4,
     paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  landscapeContainer: {
+    flex: 0,
+    height: 65,
+    elevation: 4,
+    paddingHorizontal: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
