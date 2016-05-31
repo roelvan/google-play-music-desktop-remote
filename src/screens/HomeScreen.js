@@ -79,7 +79,10 @@ export default class HomeScreen extends Component {
   _handlePlaylistNavigation = (playlist) => {
     return () => {
       this.refs.drawer.closeDrawer()
-      this.props.navigator.push({ name: 'playlist', playlist, })
+      this.props.navigator.push({
+        name: 'playlist',
+        playlist: playlist, // eslint-disable-line
+      })
     }
   }
 
@@ -128,7 +131,7 @@ export default class HomeScreen extends Component {
       >
         <View style={styles.container}>
           <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
-          <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu />
+          <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
           <View style={styles.content}>
             <View style={{ flex: 1, alignItems: 'center' }}>
               <TrackCard
