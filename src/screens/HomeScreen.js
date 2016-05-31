@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { DrawerLayoutAndroid, ListView, StatusBar, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
 import { getTheme } from 'react-native-material-kit'
-// import Zeroconf from 'react-native-zeroconf'
+import Zeroconf from 'react-native-zeroconf'
 import TrackCard from '../components/TrackCard'
 import ControlBar from '../components/ControlBar'
 import ProgressSlider from '../components/ProgressSlider'
@@ -25,16 +25,18 @@ export default class HomeScreen extends Component {
     webSocketStore.connect(settingsStore.IP_ADDRESS)
     this.CONNECTED_IP = settingsStore.IP_ADDRESS
 
-    if (this.CONNECTED_IP === 'NOT_SET') {
-      this.props.navigator.push({ name: 'settings' })
-    }
-    // this.zeroconf = new Zeroconf()
-    // this.zeroconf.scan(type = 'http', protocol = 'tcp', domain = 'local.')
+    this.zeroconf = new Zeroconf()
+    this.zeroconf.scan('GPMDP')
     // this.zeroconf.scan('GPMDP')
-    // this.zeroconf.on('start', () => console.log('start.'))
-    // this.zeroconf.on('found', () => console.log('found.'))
-    // this.zeroconf.on('resolved', () => console.log('resolved.'))
-    // this.zeroconf.on('error', () => console.log('error.'))
+    this.zeroconf.on('start', () => console.log('start.'))
+    this.zeroconf.on('found', () => console.log('found'))
+    this.zeroconf.on('resolved', (service) => {
+      if (service.host !== this.CONNECTED_IP) {
+        console.log('found service, updating IP')
+        this.props.settingsStore.updateIPAddress(service.host)
+      }
+    })
+    this.zeroconf.on('error', () => console.log('error.'))
   }
 
   componentDidUpdate () {
@@ -77,7 +79,7 @@ export default class HomeScreen extends Component {
   _handlePlaylistNavigation = (playlist) => {
     return () => {
       this.refs.drawer.closeDrawer()
-      this.props.navigator.push({ name: 'playlist', playlist, })
+      this.props.navigator.push({ name: 'playlist', playlist })
     }
   }
 

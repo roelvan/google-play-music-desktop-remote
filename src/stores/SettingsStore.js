@@ -10,6 +10,9 @@ export default class SettingsStore {
   }
 
   updateIPAddress = (newIP) => {
+    AsyncStorage.setItem('IP_ADDRESS', newIP)
+      .then(() => {})
+      .catch(() => {})
     this.IP_ADDRESS = newIP
   }
 }

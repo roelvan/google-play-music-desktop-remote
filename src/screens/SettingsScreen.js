@@ -17,9 +17,6 @@ export default class SettingsScreen extends Component {
 
   _ipChanged = (newIP) => {
     this.props.settingsStore.updateIPAddress(newIP)
-    AsyncStorage.setItem('IP_ADDRESS', newIP)
-      .then(() => {})
-      .catch(() => {})
   }
 
   render () {
