@@ -79,7 +79,7 @@ export default class HomeScreen extends Component {
   _handlePlaylistNavigation = (playlist) => {
     return () => {
       this.refs.drawer.closeDrawer()
-      this.props.navigator.push({ name: 'playlist', playlist })
+      this.props.navigator.push({ name: 'playlist', playlist, })
     }
   }
 
