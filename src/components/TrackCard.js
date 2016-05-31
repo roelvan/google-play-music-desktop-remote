@@ -29,7 +29,7 @@ const TrackCard = ({ title, artist, album, albumArt }) => {
       <View style={{ flex: 1, margin: imageMargin }}>
         <Image
           source={art}
-          style={{ flex: 1, margin: -2, resizeMode, width: imageWidth }}
+          style={{ flex: 1, margin: -2, resizeMode, width: imageWidth, height: imageWidth }}
         />
       </View>
       <View style={{ margin: 15 }}>
