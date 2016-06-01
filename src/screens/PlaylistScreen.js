@@ -16,6 +16,11 @@ export default class PlaylistScreen extends Component {
     webSocketStore: PropTypes.object
   }
 
+  _formatTime (milli) {
+    const seconds = Math.round((milli / 1000) % 60)
+    return `${Math.floor(milli / 60000)}:${seconds < 10 ? '0' : ''}${seconds}`
+  }
+
   _handlePress = (track) => {
     return () => {
       this.props.webSocketStore.sendPlayPlaylistTrack({
@@ -60,9 +65,10 @@ export default class PlaylistScreen extends Component {
                 >
                   <View>
                     <View style={styles.track}>
-                      <Image source={{ uri: track.albumArt }} style={styles.trackImage} />
+                      <Image source={{ uri: track.albumArt || 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' }} style={styles.trackImage} />
                       <View style={styles.trackMeta}>
-                        <Text>{track.title}</Text>
+                        <Text style={{ fontSize: 18 }}>{track.title}</Text>
+                        <Text>{`${track.artist} - ${this._formatTime(track.duration)}`}</Text>
                       </View>
                     </View>
                   </View>
@@ -92,13 +98,13 @@ const styles = StyleSheet.create({
   },
   track: {
     margin: 10,
-    height: 64,
+    height: 48,
     flex: 1,
     flexDirection: 'row'
   },
   trackImage: {
-    height: 64,
-    width: 64
+    height: 48,
+    width: 48
   },
   trackMeta: {
     flex: 1,
