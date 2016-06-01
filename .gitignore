@@ -35,3 +35,5 @@ npm-debug.log
 
 # nyc
 .nyc_output
+android/app/keys.json
+android/app/GPMDP-Remote.keystore

@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.github.triplet.play'
 
 import com.android.build.OutputFile
 
@@ -84,10 +85,37 @@ android {
         applicationId "com.marshallofsound.gpmdp.remote"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0.0"
+
+
+        // Fetch the version according to git latest tag and "how far are we from last tag"
+        def longVersionName = "git -C ${rootDir} describe --tags --long".execute().text.trim()
+        def (fullVersionTag, versionBuild, gitSha) = longVersionName.tokenize('-')
+        def(versionMajor, versionMinor, versionPatch) = fullVersionTag.tokenize('.')
+
+        // Set the version name
+        versionName "$versionMajor.$versionMinor.$versionPatch($versionBuild)"
+
+        // Turn the version name into a version code
+        versionCode versionMajor.toInteger() * 100000 +
+                versionMinor.toInteger() * 10000 +
+                versionPatch.toInteger() * 1000 +
+                versionBuild.toInteger()
+
+        // Friendly print the version output to the Gradle console
+        printf("\n--------" + "VERSION DATA--------" + "\n" + "- CODE: " + versionCode + "\n" +
+                "- NAME: " + versionName + "\n----------------------------\n")
+
+
         ndk {
             abiFilters "armeabi-v7a", "x86"
+        }
+    }
+    play {
+        track = 'alpha'
+        if (System.getenv()["CI"]) { // CI=true is exported by Greenhouse
+            jsonFile = file(System.getenv()["GH_RELEASE_KEYS_PATH"])
+        } else {
+            jsonFile = file('keys.json')
         }
     }
     signingConfigs {
@@ -146,4 +174,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-vector-icons')
+}
+
+project.afterEvaluate {
+    def generateReleasePlayResources = project.tasks.getByName("generateReleasePlayResources")
+    generateReleasePlayResources.dependsOn assembleRelease
 }
