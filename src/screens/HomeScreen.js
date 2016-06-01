@@ -74,7 +74,7 @@ export default class HomeScreen extends Component {
     Animated.timing(
       this.state.bounceDownValue,
       {
-        toValue: this.state.bouncing ? 0 : 120,
+        toValue: this.state.bouncing ? 0 : 128,
         duration: 400
       }
     ).start()
@@ -180,18 +180,6 @@ export default class HomeScreen extends Component {
       >
         <View style={styles.container}>
           <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
-          <Animated.View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              elevation: 4,
-              transform: [{ translateY: this.state.bounceUpValue }]
-            }}
-          >
-            <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
-          </Animated.View>
           <View style={styles.content}>
             <View style={{ flex: 1, alignItems: 'center' }}>
               <TouchableWithoutFeedback onPress={this._imageTap}>
@@ -199,13 +187,28 @@ export default class HomeScreen extends Component {
                   source={art}
                   style={{
                     flex: 1,
-                    resizeMode: 'cover',
+                    resizeMode: !art.uri ? 'contain' : 'cover',
                     alignSelf: 'stretch',
-                    top: 0
+                    margin: !art.uri ? 24 : 0,
+                    top: 0,
+                    height: null,
+                    width: null
                   }}
                 />
               </TouchableWithoutFeedback>
             </View>
+            <Animated.View
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                elevation: 10,
+                transform: [{ translateY: this.state.bounceUpValue }]
+              }}
+            >
+              <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
+            </Animated.View>
             <Animated.View
               style={[styles.controlBar, {
                 position: 'absolute',
