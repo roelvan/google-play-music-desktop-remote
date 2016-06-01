@@ -1,4 +1,4 @@
-package com.googleplaymusicdesktopremote.device;
+package com.marshallofsound.gpmdp.remote.device;
 
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.googleplaymusicdesktopremote.volume;
+package com.marshallofsound.gpmdp.remote.volume;
 
 import android.view.KeyEvent;
 

@@ -1,4 +1,4 @@
-package com.googleplaymusicdesktopremote;
+package com.marshallofsound.gpmdp.remote;
 
 import android.content.res.Configuration;
 import android.os.Build;
@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
-import com.googleplaymusicdesktopremote.volume.VolumePackage;
-import com.googleplaymusicdesktopremote.device.DevicePackage;
+import com.marshallofsound.gpmdp.remote.volume.VolumePackage;
+import com.marshallofsound.gpmdp.remote.device.DevicePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.balthazargronon.react.ZeroconfReactPackage;
 
