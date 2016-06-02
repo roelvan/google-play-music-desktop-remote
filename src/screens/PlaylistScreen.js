@@ -67,8 +67,8 @@ export default class PlaylistScreen extends Component {
                     <View style={styles.track}>
                       <Image source={{ uri: track.albumArt || 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' }} style={styles.trackImage} />
                       <View style={styles.trackMeta}>
-                        <Text style={{ fontSize: 18 }}>{track.title}</Text>
-                        <Text>{`${track.artist} - ${this._formatTime(track.duration)}`}</Text>
+                        <Text numberOfLines={1} style={{ fontSize: 18 }}>{track.title}</Text>
+                        <Text numberOfLines={1}>{`${track.artist} - ${this._formatTime(track.duration)}`}</Text>
                       </View>
                     </View>
                   </View>
