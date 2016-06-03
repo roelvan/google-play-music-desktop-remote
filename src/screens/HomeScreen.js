@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Animated, DrawerLayoutAndroid, DeviceEventEmitter, Image, NativeModules, StatusBar, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, BackAndroid, DrawerLayoutAndroid, DeviceEventEmitter, Image, NativeModules, StatusBar, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
 import Zeroconf from 'react-native-zeroconf'
 import ControlBar from '../components/ControlBar'
@@ -59,6 +59,14 @@ export default class HomeScreen extends Component {
       this.setState({
         orientation: data.orientation
       })
+    })
+
+    BackAndroid.addEventListener('hardwareBackPress', () => {
+      if (this.props.navigator && this.props.navigator.getCurrentRoutes().length > 1) {
+        this.props.navigator.pop()
+        return true
+      }
+      return false
     })
   }
 
