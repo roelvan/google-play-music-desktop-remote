@@ -69,5 +69,7 @@ export default class TrackStore {
     this.isStopped = true
     this.currentTime = 0
     this.totalTime = 0
+    this.playlistsDataStore = this.playlistsDataStore.cloneWithRows([])
+    this.queueDataStore = this.queueDataStore.cloneWithRows([])
   }
 }
