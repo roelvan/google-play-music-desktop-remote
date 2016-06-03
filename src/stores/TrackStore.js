@@ -14,6 +14,7 @@ export default class TrackStore {
   @observable totalTime = 0
   @observable playlists = []
   @observable playlistsDataStore = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) })
+  @observable queueDataStore = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) })
 
   changeTrack = (title, artist, album, albumArt) => {
     this.title = title
@@ -43,6 +44,10 @@ export default class TrackStore {
     const sortedPlaylists = playlists.sort((p1, p2) => p1.name.localeCompare(p2.name))
     this.playlists = sortedPlaylists
     this.playlistsDataStore = this.playlistsDataStore.cloneWithRows(sortedPlaylists)
+  }
+
+  updateQueue = (queue) => {
+    this.queueDataStore = this.queueDataStore.cloneWithRows(queue)
   }
 
   start = () => {

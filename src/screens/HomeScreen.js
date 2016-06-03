@@ -5,6 +5,7 @@ import Zeroconf from 'react-native-zeroconf'
 import ControlBar from '../components/ControlBar'
 import PlaylistNavigation from '../components/PlaylistNavigation'
 import ProgressSlider from '../components/ProgressSlider'
+import Queue from '../components/Queue'
 import SongInfo from '../components/SongInfo'
 import Toolbar from '../components/Toolbar'
 import colors from '../theme/colors'
@@ -27,7 +28,8 @@ export default class HomeScreen extends Component {
       bouncing: false,
       bounceDownValue: new Animated.Value(0),
       bounceUpValue: new Animated.Value(0),
-      orientation: 'PORTRAIT'
+      orientation: 'PORTRAIT',
+      showQueue: false
     }
     DeviceInfo.getDeviceOrientation()
       .then((o) => this.setState({
@@ -120,10 +122,16 @@ export default class HomeScreen extends Component {
       })
     }
 
+  _handleSongInfoPress = () => {
+    this.setState({
+      showQueue: !this.state.showQueue
+    })
+  }
+
   render () {
     let { title, artist, album, albumArt, isPlaying,
       isStopped, currentTime, totalTime, repeatMode, shuffleMode } = this.props.trackStore
-    const { playlistsDataStore } = this.props.trackStore
+    const { playlistsDataStore, queueDataStore } = this.props.trackStore
     const { isConnected } = this.props.webSocketStore
 
     if (!isConnected) {
@@ -161,11 +169,20 @@ export default class HomeScreen extends Component {
                 />
               </TouchableWithoutFeedback>
             </View>
+            {
+              this.state.showQueue ?
+              (
+                <Animated.View style={[styles.queue, { opacity: this.state.queueOpacity, top: this.state.bouncing ? 50 : 106, bottom: this.state.orientation === 'LANDSCAPE' ? 65 : 100 }]} >
+                  <Queue data={queueDataStore} WebSocketStore={this.props.webSocketStore} />
+                </Animated.View>
+              )
+              : null
+            }
             <Animated.View style={[styles.toolbar, { transform: [{ translateY: this.state.bounceUpValue }] }]} >
               <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
             </Animated.View>
             <Animated.View style={[styles.toolbarSongInfo, { transform: [{ translateY: this.state.bounceUpValue }] }]} >
-              <SongInfo title={title} artist={artist} album={album} />
+              <SongInfo title={title} artist={artist} album={album} onPress={this._handleSongInfoPress} />
             </Animated.View>
             <Animated.View style={[styles.controlBar, { transform: [{ translateY: this.state.bounceDownValue }] }]} >
               <ControlBar
@@ -241,5 +258,12 @@ const styles = StyleSheet.create({
     top: 0,
     height: null,
     width: null
+  },
+  queue: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    elevation: 11
   }
 })

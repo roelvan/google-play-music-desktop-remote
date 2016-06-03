@@ -117,6 +117,10 @@ export default class WebSocketStore {
         this.trackStore.updatePlaylists(payload)
         break
       }
+      case 'queue': {
+        this.trackStore.updateQueue(payload)
+        break
+      }
       default: {
         if (channel === 'lyrics') return
         console.log(`WebSocket message received, channel: ${channel}, payload: ${payload}`)
