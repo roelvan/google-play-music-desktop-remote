@@ -148,6 +148,11 @@ export default class HomeScreen extends Component {
       art = { uri: art === null ? 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' : `${art}=s1000-c-e1200` }
     }
 
+    let queueBottom = 0
+    if (!this.state.bouncing) {
+      queueBottom = this.state.orientation === 'LANDSCAPE' ? 65 : 100
+    }
+
     return (
       <DrawerLayoutAndroid
         ref="drawer"
@@ -172,7 +177,7 @@ export default class HomeScreen extends Component {
             {
               this.state.showQueue ?
               (
-                <Animated.View style={[styles.queue, { opacity: this.state.queueOpacity, top: this.state.bouncing ? 50 : 106, bottom: this.state.orientation === 'LANDSCAPE' ? 65 : 100 }]} >
+                <Animated.View style={[styles.queue, { opacity: this.state.queueOpacity, top: this.state.bouncing ? 46 : 106, bottom: queueBottom }]} >
                   <Queue data={queueDataStore} webSocketStore={this.props.webSocketStore} />
                 </Animated.View>
               )
@@ -264,6 +269,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    elevation: 11
+    elevation: 8
   }
 })

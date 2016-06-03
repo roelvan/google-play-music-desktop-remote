@@ -14,6 +14,7 @@ export default class TrackStore {
   @observable totalTime = 0
   @observable playlists = []
   @observable playlistsDataStore = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) })
+  queue = []
   @observable queueDataStore = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) })
 
   changeTrack = (title, artist, album, albumArt) => {
@@ -21,6 +22,7 @@ export default class TrackStore {
     this.artist = artist
     this.album = album
     this.albumArt = albumArt
+    this.updateQueue(this.queue)
   }
 
   setPlayingStatus = (isPlaying) => {
@@ -41,13 +43,30 @@ export default class TrackStore {
   }
 
   updatePlaylists = (playlists) => {
-    const sortedPlaylists = playlists.sort((p1, p2) => p1.name.localeCompare(p2.name))
+    const sortedPlaylists = playlists.sort((p1, p2) => p1.name.localeCompare(p2.name)).map((playlist) => {
+      let marked = false
+      return Object.assign(playlist, { tracks: playlist.tracks.map((track) => {
+        if (!marked && track.title === this.title && track.artist === this.artist && track.album === this.album) {
+          marked = true
+          return Object.assign({}, track, { playing: true })
+        }
+        return Object.assign({}, track, { playing: false })
+      }) })
+    })
     this.playlists = sortedPlaylists
     this.playlistsDataStore = this.playlistsDataStore.cloneWithRows(sortedPlaylists)
   }
 
   updateQueue = (queue) => {
-    this.queueDataStore = this.queueDataStore.cloneWithRows(queue)
+    let marked = false
+    this.queue = queue.map((track) => {
+      if (!marked && track.title === this.title && track.artist === this.artist && track.album === this.album) {
+        marked = true
+        return Object.assign({}, track, { playing: true })
+      }
+      return Object.assign({}, track, { playing: false })
+    })
+    this.queueDataStore = this.queueDataStore.cloneWithRows(this.queue)
   }
 
   start = () => {

@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { Image, ListView, StatusBar, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
-// import Zeroconf from 'react-native-zeroconf'
 import Toolbar from '../components/Toolbar'
 import colors from '../theme/colors'
+import SongList from '../components/SongList'
 
 @observer
 export default class PlaylistScreen extends Component {
@@ -51,28 +51,7 @@ export default class PlaylistScreen extends Component {
         <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
         <Toolbar title={playlist.name} navigator={this.props.navigator} />
         <View style={styles.content}>
-          <View style={{ flex: 1 }}>
-            <ListView
-              dataSource={ds}
-              style={{ flex: 1 }}
-              renderRow={(track) => (
-                <TouchableNativeFeedback
-                  onPress={this._handlePress(track)}
-                  background={TouchableNativeFeedback.SelectableBackground()}
-                >
-                  <View>
-                    <View style={styles.track}>
-                      <Image source={{ uri: track.albumArt || 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' }} style={styles.trackImage} />
-                      <View style={styles.trackMeta}>
-                        <Text numberOfLines={1} style={{ fontSize: 18 }}>{track.title}</Text>
-                        <Text numberOfLines={1}>{`${track.artist} - ${this._formatTime(track.duration)}`}</Text>
-                      </View>
-                    </View>
-                  </View>
-                </TouchableNativeFeedback>
-              )}
-            />
-          </View>
+          <SongList black data={ds} handlePress={this._handlePress} />
         </View>
       </View>
     )
