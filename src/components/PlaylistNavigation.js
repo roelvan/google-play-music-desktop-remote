@@ -14,6 +14,7 @@ export default class PlaylistNavigation extends Component {
     return (
       <ListView
         dataSource={playlistsDataStore}
+        enableEmptySections={true}
         renderHeader={() => (
           <View style={styles.listItem}>
             <Text style={{ fontWeight: 'bold', fontSize: 24 }}>Playlists</Text>
