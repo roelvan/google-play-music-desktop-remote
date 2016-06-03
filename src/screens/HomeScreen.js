@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react'
-import { Animated, DrawerLayoutAndroid, DeviceEventEmitter, Image, ListView, NativeModules, StatusBar, StyleSheet, Text, TouchableNativeFeedback, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, DrawerLayoutAndroid, DeviceEventEmitter, Image, NativeModules, StatusBar, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
 import Zeroconf from 'react-native-zeroconf'
 import ControlBar from '../components/ControlBar'
+import PlaylistNavigation from '../components/PlaylistNavigation'
 import ProgressSlider from '../components/ProgressSlider'
+import SongInfo from '../components/SongInfo'
 import Toolbar from '../components/Toolbar'
 import colors from '../theme/colors'
 
@@ -71,15 +73,13 @@ export default class HomeScreen extends Component {
     this.setState({
       bouncing: !this.state.bouncing
     })
-    Animated.timing(
-      this.state.bounceDownValue,
+    Animated.timing(this.state.bounceDownValue,
       {
         toValue: this.state.bouncing ? 0 : 128,
         duration: 400
       }
     ).start()
-    Animated.timing(
-      this.state.bounceUpValue,
+    Animated.timing(this.state.bounceUpValue,
       {
         toValue: this.state.bouncing ? 0 : -60,
         duration: 400
@@ -87,9 +87,7 @@ export default class HomeScreen extends Component {
     ).start()
   }
 
-  _handlePlayPress = () => {
-    this.props.webSocketStore.sendPlay()
-  }
+  _handlePlayPress = () => this.props.webSocketStore.sendPlay()
 
   _handlePrevPress = () => {
     this.props.webSocketStore.sendPrev()
@@ -111,19 +109,16 @@ export default class HomeScreen extends Component {
     this.props.webSocketStore.sendGetRepeat()
   }
 
-  _handleProgressBarTouch = (value) => {
-    this.props.webSocketStore.sendSetTime(value)
-  }
+  _handleProgressBarTouch = (value) => this.props.webSocketStore.sendSetTime(value)
 
-  _handlePlaylistNavigation = (playlist) => {
-    return () => {
+  _handlePlaylistNavigation = (playlist) =>
+    () => {
       this.refs.drawer.closeDrawer()
       this.props.navigator.push({
         name: 'playlist',
         playlist: playlist, // eslint-disable-line
       })
     }
-  }
 
   render () {
     let { title, artist, album, albumArt, isPlaying,
@@ -137,38 +132,12 @@ export default class HomeScreen extends Component {
       album = ''
       albumArt = 'NOT_CONNECTED'
     }
-    const navigationView = (
-      <ListView
-        dataSource={playlistsDataStore}
-        renderHeader={() => (
-          <View style={styles.listItem}>
-            <Text style={{ fontWeight: 'bold', fontSize: 24 }}>Playlists</Text>
-          </View>
-        )}
-        renderRow={(playlist) => {
-          return (
-            <TouchableNativeFeedback
-              onPress={this._handlePlaylistNavigation(playlist)}
-              background={TouchableNativeFeedback.Ripple(colors.GREY_LIGHT, false)}
-            >
-              <View>
-                <View style={styles.listItem}>
-                  <Text>{playlist.name}</Text>
-                </View>
-              </View>
-            </TouchableNativeFeedback>
-          )
-        }}
-      />
-    )
 
     let art = albumArt
     if (art === 'NOT_CONNECTED') {
       art = require('../components/img/cloud-off.png') // eslint-disable-line
     } else {
-      art = {
-        uri: art === null ? 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' : `${art}=s1000-c-e1200`
-      }
+      art = { uri: art === null ? 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' : `${art}=s1000-c-e1200` }
     }
 
     return (
@@ -176,76 +145,45 @@ export default class HomeScreen extends Component {
         ref="drawer"
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
-        renderNavigationView={() => navigationView}
+        renderNavigationView={() => <PlaylistNavigation playlistsDataStore={playlistsDataStore} navigate={this._handlePlaylistNavigation} />}
       >
         <View style={styles.container}>
-          <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
+          <StatusBar animated hidden={this.state.bouncing} backgroundColor={colors.ORANGE_DARK} />
           <View style={styles.content}>
             <View style={{ flex: 1, alignItems: 'center' }}>
               <TouchableWithoutFeedback onPress={this._imageTap}>
                 <Image
                   source={art}
-                  style={{
-                    flex: 1,
+                  style={[styles.artImage, {
                     resizeMode: !art.uri ? 'contain' : 'cover',
-                    alignSelf: 'stretch',
-                    margin: !art.uri ? 24 : 0,
-                    top: 0,
-                    height: null,
-                    width: null
-                  }}
+                    margin: !art.uri ? 24 : 0
+                  }]}
                 />
               </TouchableWithoutFeedback>
             </View>
-            <Animated.View
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                elevation: 10,
-                transform: [{ translateY: this.state.bounceUpValue }]
-              }}
-            >
+            <Animated.View style={[styles.toolbar, { transform: [{ translateY: this.state.bounceUpValue }] }]} >
               <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
             </Animated.View>
-            <Animated.View
-              style={[styles.controlBar, {
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0
-              }, { transform: [{ translateY: this.state.bounceDownValue }] }]}
-            >
+            <Animated.View style={[styles.toolbarSongInfo, { transform: [{ translateY: this.state.bounceUpValue }] }]} >
+              <SongInfo title={title} artist={artist} album={album} />
+            </Animated.View>
+            <Animated.View style={[styles.controlBar, { transform: [{ translateY: this.state.bounceDownValue }] }]} >
               <ControlBar
-                isPlaying={isPlaying}
-                isStopped={isStopped}
-                landscape={this.state.orientation === 'LANDSCAPE'}
-                repeatMode={repeatMode}
-                shuffleMode={shuffleMode}
-                onPlayPress={this._handlePlayPress}
-                onPrevPress={this._handlePrevPress}
-                onNextPress={this._handleNextPress}
-                onShufflePress={this._handleShufflePress}
-                onRepeatPress={this._handleRepeatPress}
+                isPlaying={isPlaying} isStopped={isStopped} landscape={this.state.orientation === 'LANDSCAPE'}
+                repeatMode={repeatMode} shuffleMode={shuffleMode}
+                onPlayPress={this._handlePlayPress} onPrevPress={this._handlePrevPress} onNextPress={this._handleNextPress}
+                onShufflePress={this._handleShufflePress} onRepeatPress={this._handleRepeatPress}
               />
             </Animated.View>
             <Animated.View
-              style={{
-                position: 'absolute',
+              style={[styles.progress, {
                 bottom: this.state.orientation === 'LANDSCAPE' ? 52 : 85,
-                left: 0,
-                right: 0,
-                elevation: 9,
                 transform: [{ translateY: this.state.bounceDownValue }]
-              }}
+              }]}
             >
               <ProgressSlider
-                ref={'progressSlider'}
-                min={0}
-                max={totalTime}
-                value={currentTime}
-                onValueChange={this._handleProgressBarTouch}
+                ref={'progressSlider'} min={0} max={totalTime}
+                value={currentTime} onValueChange={this._handleProgressBarTouch}
               />
             </Animated.View>
           </View>
@@ -266,11 +204,42 @@ const styles = StyleSheet.create({
     alignItems: 'stretch'
   },
   controlBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flex: 0,
     height: null,
     elevation: 4
   },
   listItem: {
     margin: 12
+  },
+  progress: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    elevation: 9
+  },
+  toolbar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    elevation: 10
+  },
+  toolbarSongInfo: {
+    position: 'absolute',
+    top: 56,
+    left: 0,
+    right: 0,
+    elevation: 10
+  },
+  artImage: {
+    flex: 1,
+    alignSelf: 'stretch',
+    top: 0,
+    height: null,
+    width: null
   }
 })

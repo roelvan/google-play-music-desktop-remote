@@ -1,12 +1,9 @@
 import React, { Component, PropTypes } from 'react'
-import { AsyncStorage, Image, ListView, StatusBar, StyleSheet, Text, TextInput, TouchableNativeFeedback, View } from 'react-native'
+import { Image, ListView, StatusBar, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
-import { getTheme } from 'react-native-material-kit'
 // import Zeroconf from 'react-native-zeroconf'
 import Toolbar from '../components/Toolbar'
 import colors from '../theme/colors'
-
-const theme = getTheme()
 
 @observer
 export default class PlaylistScreen extends Component {
