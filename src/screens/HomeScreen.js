@@ -173,7 +173,7 @@ export default class HomeScreen extends Component {
               this.state.showQueue ?
               (
                 <Animated.View style={[styles.queue, { opacity: this.state.queueOpacity, top: this.state.bouncing ? 50 : 106, bottom: this.state.orientation === 'LANDSCAPE' ? 65 : 100 }]} >
-                  <Queue data={queueDataStore} WebSocketStore={this.props.webSocketStore} />
+                  <Queue data={queueDataStore} webSocketStore={this.props.webSocketStore} />
                 </Animated.View>
               )
               : null

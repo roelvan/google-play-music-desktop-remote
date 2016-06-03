@@ -137,6 +137,10 @@ export default class WebSocketStore {
     this._sendMessage({ namespace: 'playlists', method: 'playWithTrack', arguments: [playlist, track] })
   }
 
+  sendPlayQueueTrack = (track) => {
+    this._sendMessage({ namespace: 'queue', method: 'playTrack', arguments: [track] })
+  }
+
   sendPrev = () => {
     this._sendMessage({ namespace: 'playback', method: 'rewind' })
   }
