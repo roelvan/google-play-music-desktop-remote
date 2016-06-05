@@ -1,5 +1,5 @@
 import { observable } from 'mobx'
-import { DeviceEventEmitter, NativeModules } from 'react-native'
+import { AsyncStorage, DeviceEventEmitter, NativeModules } from 'react-native'
 const { DeviceInfo } = NativeModules
 
 export const TEST_IP_ADDRESS = '192.168.1.60'
@@ -61,7 +61,12 @@ export default class WebSocketStore {
     this.isConnected = true
     DeviceInfo.getDeviceName()
       .then((deviceName) => {
-        this._sendMessage({ namespace: 'connect', method: 'connect', arguments: [deviceName] })
+        AsyncStorage.getItem('AUTH_CODE')
+          .then((value) => {
+            console.log(value)
+            this._sendMessage({ namespace: 'connect', method: 'connect', arguments: [deviceName, value] })
+          })
+          .catch(() => {})
       })
   }
 
@@ -86,6 +91,22 @@ export default class WebSocketStore {
     this.lastMessage = msg
     const { channel, payload } = JSON.parse(msg.data)
     switch (channel) {
+      case 'connect': {
+        if (payload === 'CODE_REQUIRED') {
+          DeviceInfo.dialog(
+            'GPMDP Code Required',
+            'Input the 4 digit code that GPMDP is displaying on screen',
+            'Authenticate'
+          ).then((val) => {
+            this._sendMessage({ namespace: 'connect', method: 'connect', arguments: ['_', val] })
+          })
+        } else {
+          AsyncStorage.setItem('AUTH_CODE', payload)
+            .then(this._onConnectionOpen)
+            .catch(() => {})
+        }
+        break
+      }
       case 'song': {
         const { title, artist, album } = payload
         const albumArt = payload.albumArt && payload.albumArt.replace(/=s90-c-e100$/g, '')

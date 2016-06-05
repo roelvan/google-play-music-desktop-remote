@@ -2,7 +2,10 @@ package com.marshallofsound.gpmdp.remote.device;
 
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
+import android.text.InputType;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -49,5 +52,23 @@ public class DeviceModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void getDeviceOrientation(Promise promise) {
     promise.resolve(reactContext.getResources().getConfiguration().orientation);
+  }
+
+  @ReactMethod
+  public void dialog(String title, String content, String positiveText, final Promise promise) {
+    if (getCurrentActivity() == null) return;
+    final CharSequence[] cs = new CharSequence[1];
+    new MaterialDialog.Builder(getCurrentActivity())
+      .title(title)
+      .content(content)
+      .positiveText(positiveText)
+      .inputType(InputType.TYPE_CLASS_TEXT)
+      .input("", null, false, new MaterialDialog.InputCallback() {
+          @Override
+          public void onInput(MaterialDialog dialog, CharSequence input) {
+              promise.resolve(input.toString());
+          }
+      })
+      .show();
   }
 }
