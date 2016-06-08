@@ -6,6 +6,7 @@ export const TEST_IP_ADDRESS = '192.168.1.60'
 export const TEST_PORT = 5672
 
 export default class WebSocketStore {
+  themeStore
   trackStore
   @observable ipAddress
   @observable port
@@ -15,8 +16,9 @@ export default class WebSocketStore {
   @observable lastMessage = null
   shouldReconnect = false
 
-  constructor (trackStore, port = TEST_PORT) {
+  constructor (trackStore, themeStore, port = TEST_PORT) {
     this.trackStore = trackStore
+    this.themeStore = themeStore
     this.port = port
 
     this.hook()
@@ -140,6 +142,20 @@ export default class WebSocketStore {
       }
       case 'queue': {
         this.trackStore.updateQueue(payload)
+        break
+      }
+      case 'settings:theme': {
+        this.themeStore.setThemeEnabled(payload)
+        this.trackStore.forceUpdatePlaylists()
+        break
+      }
+      case 'settings:themeType': {
+        this.themeStore.setThemeType(payload)
+        this.trackStore.forceUpdatePlaylists()
+        break
+      }
+      case 'settings:themeColor': {
+        this.themeStore.setThemeColor(payload)
         break
       }
       default: {

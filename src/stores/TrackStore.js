@@ -12,8 +12,8 @@ export default class TrackStore {
   @observable isStopped = true
   @observable currentTime = 0
   @observable totalTime = 0
-  @observable playlists = []
-  @observable playlistsDataStore = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) })
+  playlists = []
+  @observable playlistsDataStore = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   queue = []
   @observable queueDataStore = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) })
 
@@ -40,6 +40,10 @@ export default class TrackStore {
 
   updateShuffleMode = (shuffleMode) => {
     this.shuffleMode = shuffleMode
+  }
+
+  forceUpdatePlaylists = () => {
+    this.playlistsDataStore = this.playlistsDataStore.cloneWithRows(this.playlists.map((playlist) => Object.assign({}, playlist)))
   }
 
   updatePlaylists = (playlists) => {

@@ -5,12 +5,14 @@ import HomeScreen from './screens/HomeScreen'
 import PlaylistScreen from './screens/PlaylistScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import SettingsStore from './stores/SettingsStore'
+import ThemeStore from './stores/ThemeStore'
 import TrackStore from './stores/TrackStore'
 import WebSocketStore from './stores/WebSocketStore'
 
 const settingsStore = new SettingsStore()
+const themeStore = new ThemeStore()
 const trackStore = new TrackStore()
-const webSocketStore = new WebSocketStore(trackStore)
+const webSocketStore = new WebSocketStore(trackStore, themeStore)
 
 setTheme({
   primaryColor: MKColor.Orange,
@@ -44,14 +46,14 @@ export default class App extends Component {
         renderScene={(route, navigator) => {
           switch (route.name) {
             case 'playlist': {
-              return (<PlaylistScreen navigator={navigator} webSocketStore={webSocketStore} playlist={route.playlist} />)
+              return (<PlaylistScreen navigator={navigator} webSocketStore={webSocketStore} playlist={route.playlist} themeStore={themeStore} />)
             }
             case 'settings': {
-              return (<SettingsScreen navigator={navigator} settingsStore={settingsStore} />)
+              return (<SettingsScreen navigator={navigator} settingsStore={settingsStore} themeStore={themeStore} />)
             }
             default:
             case 'remote': {
-              return (<HomeScreen trackStore={trackStore} webSocketStore={webSocketStore} navigator={navigator} settingsStore={settingsStore} />)
+              return (<HomeScreen trackStore={trackStore} webSocketStore={webSocketStore} navigator={navigator} settingsStore={settingsStore} themeStore={themeStore} />)
             }
           }
         }}

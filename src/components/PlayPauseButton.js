@@ -6,16 +6,17 @@ import colors from '../theme/colors'
 
 export default class PlayPauseButton extends React.Component {
   static propTypes = {
+    color: PropTypes.string,
     isPlaying: PropTypes.bool,
     isStopped: PropTypes.bool,
     landscape: PropTypes.bool
   }
 
   render () {
-    const { isPlaying, isStopped, landscape } = this.props
+    const { color, isPlaying, isStopped, landscape } = this.props
 
     const playIcon = (
-      <View style={[landscape ? styles.playPauseButtonLandscape : styles.playPauseButton, styles.playIcon]}>
+      <View style={[landscape ? styles.playPauseButtonLandscape : styles.playPauseButton, { backgroundColor: color }]}>
         <Text>
           {' '}<IconEntypo name={'controller-play'} size={landscape ? 26 : 40} color={colors.WHITE} />
         </Text>
@@ -23,7 +24,7 @@ export default class PlayPauseButton extends React.Component {
     )
 
     const pauseIcon = (
-      <View style={[landscape ? styles.playPauseButtonLandscape : styles.playPauseButton, styles.pauseIcon]}>
+      <View style={[landscape ? styles.playPauseButtonLandscape : styles.playPauseButton, { backgroundColor: color }]}>
         <IconEntypo name={'controller-paus'} size={landscape ? 26 : 40} color={colors.WHITE} />
       </View>
     )

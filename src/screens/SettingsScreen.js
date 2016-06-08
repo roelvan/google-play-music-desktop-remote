@@ -12,7 +12,8 @@ const theme = getTheme()
 export default class SettingsScreen extends Component {
   static propTypes = {
     navigator: PropTypes.object,
-    settingsStore: PropTypes.object
+    settingsStore: PropTypes.object,
+    themeStore: PropTypes.object
   }
 
   _ipChanged = (newIP) => {
@@ -20,18 +21,20 @@ export default class SettingsScreen extends Component {
   }
 
   render () {
+    const { themeStore } = this.props
     return (
-      <View style={styles.container}>
-        <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
-        <Toolbar title={'Settings'} navigator={this.props.navigator} />
+      <View style={[styles.container, { backgroundColor: themeStore.backgroundColor() }]}>
+        <StatusBar animated backgroundColor={themeStore.barColor()} />
+        <Toolbar title={'Settings'} navigator={this.props.navigator} color={themeStore.barColor()} />
         <View style={styles.content}>
           <View style={styles.settingsContent}>
-            <Text>GPMDP IP Address</Text>
+            <Text style={{ color: themeStore.foreColor() }}>GPMDP IP Address</Text>
             <TextInput
+              style={{ color: themeStore.foreColor() }}
               autoCorrect={false}
               defaultValue={this.props.settingsStore.IP_ADDRESS === 'NOT_SET' ? '' : this.props.settingsStore.IP_ADDRESS}
               keyboardType="numeric"
-              underlineColorAndroid={colors.ORANGE_DARK}
+              underlineColorAndroid={themeStore.highlightColor()}
               placeholder="GPMDP IP Address"
               onChangeText={this._ipChanged}
             />
@@ -48,8 +51,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch'
   },
   content: {
-    flex: 1,
-    backgroundColor: colors.GREY_LIGHTER
+    flex: 1
   },
   controlBar: {
     flex: 0,

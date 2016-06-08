@@ -5,6 +5,7 @@ import colors from '../theme/colors'
 
 export default class Toolbar extends Component {
   static propTypes = {
+    color: PropTypes.string,
     drawerFunction: PropTypes.func,
     navigator: PropTypes.object,
     title: PropTypes.string,
@@ -31,7 +32,7 @@ export default class Toolbar extends Component {
   }
 
   render () {
-    const { title, settingsMenu, showDrawer, drawerFunction } = this.props
+    const { color, title, settingsMenu, showDrawer, drawerFunction } = this.props
     const actions = [
       {
         title: 'Settings'
@@ -42,7 +43,7 @@ export default class Toolbar extends Component {
       <Icon.ToolbarAndroid
         navIconName={showDrawer ? 'md-menu' : 'md-arrow-back'}
         onIconClicked={showDrawer ? drawerFunction : this._backButtonPressed}
-        style={styles.toolbar}
+        style={[styles.toolbar, { backgroundColor: color }]}
         titleColor={'white'}
         title={title}
         actions={(settingsMenu ? actions : null)}
@@ -54,7 +55,6 @@ export default class Toolbar extends Component {
 
 const styles = StyleSheet.create({
   toolbar: {
-    backgroundColor: colors.ORANGE,
     height: 56,
     elevation: 2
   }

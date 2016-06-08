@@ -10,6 +10,7 @@ export default class PlaylistScreen extends Component {
   static propTypes = {
     navigator: PropTypes.object,
     playlist: PropTypes.object,
+    themeStore: PropTypes.object,
     webSocketStore: PropTypes.object
   }
 
@@ -28,7 +29,7 @@ export default class PlaylistScreen extends Component {
   }
 
   render () {
-    const { playlist } = this.props
+    const { playlist, themeStore } = this.props
     let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) })
     const cleanTracks = []
     for (let i = 0; i < playlist.tracks.length; i++) {
@@ -47,11 +48,11 @@ export default class PlaylistScreen extends Component {
     ds = ds.cloneWithRows(cleanTracks)
 
     return (
-      <View style={styles.container}>
-        <StatusBar animated backgroundColor={colors.ORANGE_DARK} />
-        <Toolbar title={playlist.name} navigator={this.props.navigator} />
-        <View style={styles.content}>
-          <SongList black data={ds} handlePress={this._handlePress} />
+      <View style={[styles.container]}>
+        <StatusBar animated backgroundColor={themeStore.barColor()} />
+        <Toolbar title={playlist.name} navigator={this.props.navigator} color={themeStore.barColor()} />
+        <View style={[styles.content, { backgroundColor: themeStore.backgroundColor() }]}>
+          <SongList black={!(themeStore.themeEnabled && themeStore.themeType === 'FULL')} data={ds} handlePress={this._handlePress} />
         </View>
       </View>
     )
@@ -64,8 +65,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch'
   },
   content: {
-    flex: 1,
-    backgroundColor: colors.GREY_LIGHTER
+    flex: 1
   },
   controlBar: {
     flex: 0,

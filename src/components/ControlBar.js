@@ -19,7 +19,11 @@ export default class ControlBar extends React.Component {
     onPrevPress: PropTypes.func,
     onNextPress: PropTypes.func,
     onRepeatPress: PropTypes.func,
-    onShufflePress: PropTypes.func
+    onShufflePress: PropTypes.func,
+
+    backgroundColor: PropTypes.string,
+    foreColor: PropTypes.string,
+    highlightColor: PropTypes.string
   }
 
   static defaultProps = {
@@ -28,23 +32,23 @@ export default class ControlBar extends React.Component {
   }
 
   render = () => {
-    const { landscape, onPlayPress, onPrevPress, onNextPress, onRepeatPress, onShufflePress, isPlaying, isStopped, repeatMode, shuffleMode } = this.props
+    const { landscape, onPlayPress, onPrevPress, onNextPress, onRepeatPress, onShufflePress, isPlaying, isStopped, repeatMode, shuffleMode, backgroundColor, foreColor, highlightColor } = this.props
 
-    let repeatColor = colors.GREY_DARK
-    let shuffleColor = colors.GREY_DARK
+    let repeatColor = foreColor
+    let shuffleColor = foreColor
     if (repeatMode !== 'NO_REPEAT') {
-      repeatColor = colors.ORANGE
+      repeatColor = highlightColor
     }
     if (shuffleMode !== 'NO_SHUFFLE') {
-      shuffleColor = colors.ORANGE
+      shuffleColor = highlightColor
     }
     const repeatIcon = <IconMaterial name={repeatMode === 'SINGLE_REPEAT' ? 'repeat-one' : 'repeat'} size={landscape ? 20 : 26} color={repeatColor} />
-    const prevIcon = <IconMaterial name={'skip-previous'} size={landscape ? 20 : 26} color={colors.GREY_DARK} />
-    const nextIcon = <IconMaterial name={'skip-next'} size={landscape ? 20 : 26} color={colors.GREY_DARK} />
+    const prevIcon = <IconMaterial name={'skip-previous'} size={landscape ? 20 : 26} color={foreColor} />
+    const nextIcon = <IconMaterial name={'skip-next'} size={landscape ? 20 : 26} color={foreColor} />
     const shuffleIcon = <IconMaterial name={'shuffle'} size={landscape ? 20 : 26} color={shuffleColor} />
 
     return (
-      <View style={[theme.cardStyle, landscape ? styles.landscapeContainer : styles.container]}>
+      <View style={[theme.cardStyle, landscape ? styles.landscapeContainer : styles.container, { backgroundColor, borderColor: backgroundColor, borderRadius: 0 }]}>
         <CircleButton onPress={onRepeatPress} size={landscape ? 32 : 42}>
           {repeatIcon}
         </CircleButton>
@@ -52,7 +56,7 @@ export default class ControlBar extends React.Component {
           {prevIcon}
         </CircleButton>
         <CircleButton onPress={onPlayPress} size={landscape ? 55 : 84}>
-          <PlayPauseButton isPlaying={isPlaying} isStopped={isStopped} landscape={landscape} />
+          <PlayPauseButton color={highlightColor} isPlaying={isPlaying} isStopped={isStopped} landscape={landscape} />
         </CircleButton>
         <CircleButton onPress={onNextPress} size={landscape ? 32 : 42}>
           {nextIcon}

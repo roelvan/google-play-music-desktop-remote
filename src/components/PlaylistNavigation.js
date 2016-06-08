@@ -4,20 +4,23 @@ import colors from '../theme/colors'
 
 export default class PlaylistNavigation extends Component {
   static propTypes = {
+    backgroundColor: PropTypes.string,
+    foreColor: PropTypes.string,
     playlistsDataStore: PropTypes.object,
     navigate: PropTypes.func
   }
 
   render () {
-    const { playlistsDataStore, navigate } = this.props
+    const { playlistsDataStore, navigate, backgroundColor, foreColor } = this.props
 
     return (
       <ListView
         dataSource={playlistsDataStore}
         enableEmptySections={true}
+        style={{ backgroundColor }}
         renderHeader={() => (
           <View style={styles.listItem}>
-            <Text style={{ fontWeight: 'bold', fontSize: 24 }}>Playlists</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 24, color: foreColor }}>Playlists</Text>
           </View>
         )}
         renderRow={(playlist) => {
@@ -28,7 +31,7 @@ export default class PlaylistNavigation extends Component {
             >
               <View>
                 <View style={styles.listItem}>
-                  <Text>{playlist.name}</Text>
+                  <Text style={{ color: foreColor }}>{playlist.name}</Text>
                 </View>
               </View>
             </TouchableNativeFeedback>

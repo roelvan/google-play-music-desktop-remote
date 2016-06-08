@@ -8,6 +8,7 @@ import metrics from '../theme/metrics'
 @observer
 export default class ProgressSlider extends React.Component {
   static propTypes = {
+    highlightColor: PropTypes.string,
     min: PropTypes.number,
     max: PropTypes.number,
     value: PropTypes.number,
@@ -39,7 +40,7 @@ export default class ProgressSlider extends React.Component {
   }
 
   render () {
-    const { min, max } = this.props
+    const { highlightColor, min, max } = this.props
     return (
       <CustomSlider
         ref={'slider'}
@@ -50,7 +51,7 @@ export default class ProgressSlider extends React.Component {
         onPress={this._handlePress}
         onConfirm={this._handleConfirm}
         upperTrackColor="rgba(0, 0, 0, 0)"
-        lowerTrackColor={colors.ORANGE}
+        lowerTrackColor={highlightColor}
       />
     )
   }

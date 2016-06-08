@@ -18,6 +18,7 @@ export default class HomeScreen extends Component {
     navigator: PropTypes.object,
     settingsStore: PropTypes.object,
     trackStore: PropTypes.object,
+    themeStore: PropTypes.object,
     webSocketStore: PropTypes.object
   }
 
@@ -141,6 +142,7 @@ export default class HomeScreen extends Component {
       isStopped, currentTime, totalTime, repeatMode, shuffleMode } = this.props.trackStore
     const { playlistsDataStore, queueDataStore } = this.props.trackStore
     const { isConnected } = this.props.webSocketStore
+    const { themeStore } = this.props
 
     if (!isConnected) {
       title = 'Not Connected'
@@ -166,10 +168,14 @@ export default class HomeScreen extends Component {
         ref="drawer"
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
-        renderNavigationView={() => <PlaylistNavigation playlistsDataStore={playlistsDataStore} navigate={this._handlePlaylistNavigation} />}
+        renderNavigationView={() =>
+          <PlaylistNavigation
+            backgroundColor={themeStore.backgroundColor()} foreColor={themeStore.foreColor()}
+            playlistsDataStore={playlistsDataStore} navigate={this._handlePlaylistNavigation}
+          />}
       >
-        <View style={styles.container}>
-          <StatusBar animated hidden={this.state.bouncing} backgroundColor={colors.ORANGE_DARK} />
+        <View style={[styles.container, { backgroundColor: this.props.themeStore.backgroundColor() }]}>
+          <StatusBar animated hidden={this.state.bouncing} backgroundColor={this.props.themeStore.barColor()} />
           <View style={styles.content}>
             <View style={{ flex: 1, alignItems: 'center' }}>
               <TouchableWithoutFeedback onPress={this._imageTap}>
@@ -192,15 +198,16 @@ export default class HomeScreen extends Component {
               : null
             }
             <Animated.View style={[styles.toolbar, { transform: [{ translateY: this.state.bounceUpValue }] }]} >
-              <Toolbar title={'Home'} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
+              <Toolbar title={'Home'} color={themeStore.barColor()} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
             </Animated.View>
             <Animated.View style={[styles.toolbarSongInfo, { transform: [{ translateY: this.state.bounceUpValue }] }]} >
               <SongInfo title={title} artist={artist} album={album} onPress={this._handleSongInfoPress} />
             </Animated.View>
             <Animated.View style={[styles.controlBar, { transform: [{ translateY: this.state.bounceDownValue }] }]} >
               <ControlBar
+                backgroundColor={themeStore.backgroundColor()} foreColor={themeStore.foreColor()} highlightColor={themeStore.highlightColor()}
                 isPlaying={isPlaying} isStopped={isStopped} landscape={this.state.orientation === 'LANDSCAPE'}
-                repeatMode={repeatMode} shuffleMode={shuffleMode}
+                repeatMode={repeatMode} shuffleMode={shuffleMode} themeStore={this.props.themeStore}
                 onPlayPress={this._handlePlayPress} onPrevPress={this._handlePrevPress} onNextPress={this._handleNextPress}
                 onShufflePress={this._handleShufflePress} onRepeatPress={this._handleRepeatPress}
               />
@@ -212,7 +219,7 @@ export default class HomeScreen extends Component {
               }]}
             >
               <ProgressSlider
-                ref={'progressSlider'} min={0} max={totalTime}
+                ref={'progressSlider'} min={0} max={totalTime} highlightColor={themeStore.highlightColor()}
                 value={currentTime} onValueChange={this._handleProgressBarTouch}
               />
             </Animated.View>
