@@ -3,16 +3,19 @@ import { Navigator } from 'react-native'
 import { setTheme, MKColor } from 'react-native-material-kit'
 import HomeScreen from './screens/HomeScreen'
 import PlaylistScreen from './screens/PlaylistScreen'
+import SearchStore from './stores/SearchStore'
+import SearchScreen from './screens/SearchScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import SettingsStore from './stores/SettingsStore'
 import ThemeStore from './stores/ThemeStore'
 import TrackStore from './stores/TrackStore'
 import WebSocketStore from './stores/WebSocketStore'
 
+const searchStore = new SearchStore()
 const settingsStore = new SettingsStore()
 const themeStore = new ThemeStore()
 const trackStore = new TrackStore()
-const webSocketStore = new WebSocketStore(trackStore, themeStore)
+const webSocketStore = new WebSocketStore(trackStore, themeStore, searchStore)
 
 setTheme({
   primaryColor: MKColor.Orange,
@@ -50,6 +53,9 @@ export default class App extends Component {
             }
             case 'settings': {
               return (<SettingsScreen navigator={navigator} settingsStore={settingsStore} themeStore={themeStore} />)
+            }
+            case 'search': {
+              return (<SearchScreen navigator={navigator} themeStore={themeStore} webSocketStore={webSocketStore} searchStore={searchStore} />)
             }
             default:
             case 'remote': {

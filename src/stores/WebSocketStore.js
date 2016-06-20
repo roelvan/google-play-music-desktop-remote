@@ -6,6 +6,7 @@ export const TEST_IP_ADDRESS = '192.168.1.60'
 export const TEST_PORT = 5672
 
 export default class WebSocketStore {
+  searchStore
   themeStore
   trackStore
   @observable ipAddress
@@ -16,7 +17,8 @@ export default class WebSocketStore {
   @observable lastMessage = null
   shouldReconnect = false
 
-  constructor (trackStore, themeStore, port = TEST_PORT) {
+  constructor (trackStore, themeStore, searchStore, port = TEST_PORT) {
+    this.searchStore = searchStore
     this.trackStore = trackStore
     this.themeStore = themeStore
     this.port = port
@@ -144,6 +146,11 @@ export default class WebSocketStore {
         this.trackStore.updateQueue(payload)
         break
       }
+      case 'search-results': {
+        this.searchStore.setSearchText(payload.searchText)
+        this.searchStore.setSearchResults(payload)
+        break
+      }
       case 'settings:theme': {
         this.themeStore.setThemeEnabled(payload)
         this.trackStore.forceUpdatePlaylists()
@@ -200,6 +207,14 @@ export default class WebSocketStore {
 
   sendToggleRepeat = () => {
     this._sendMessage({ namespace: 'playback', method: 'toggleRepeat' })
+  }
+
+  sendSearch = (searchText) => {
+    this._sendMessage({ namespace: 'search', method: 'performSearch', arguments: [searchText] })
+  }
+
+  sendSearchAndPlayResult = (searchText, result) => {
+    this._sendMessage({ namespace: 'search', method: 'performSearchAndPlayResult', arguments: [searchText, result] })
   }
 
   sendSetTime = (time) => {

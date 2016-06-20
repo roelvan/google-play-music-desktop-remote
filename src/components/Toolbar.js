@@ -17,6 +17,12 @@ export default class Toolbar extends Component {
     switch (actionIndex) {
       case 0: {
         this.props.navigator.push({
+          name: 'search'
+        })
+        break
+      }
+      case 1: {
+        this.props.navigator.push({
           name: 'settings'
         })
         break
@@ -34,6 +40,9 @@ export default class Toolbar extends Component {
   render () {
     const { color, title, settingsMenu, showDrawer, drawerFunction } = this.props
     const actions = [
+      {
+        title: 'Search'
+      },
       {
         title: 'Settings'
       }

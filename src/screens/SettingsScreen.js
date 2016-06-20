@@ -36,6 +36,7 @@ export default class SettingsScreen extends Component {
               keyboardType="numeric"
               underlineColorAndroid={themeStore.highlightColor()}
               placeholder="GPMDP IP Address"
+              placeholderTextColor={themeStore.foreColor()}
               onChangeText={this._ipChanged}
             />
           </View>
