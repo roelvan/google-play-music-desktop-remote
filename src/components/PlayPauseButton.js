@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 56,
     height: 56,
-    borderRadius: 27
+    borderRadius: 28
   },
   playPauseButtonLandscape: {
     justifyContent: 'center',

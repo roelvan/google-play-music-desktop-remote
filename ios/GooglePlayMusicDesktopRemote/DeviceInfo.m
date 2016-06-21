@@ -12,18 +12,18 @@
 
 RCT_REMAP_METHOD(getDeviceOrientation, resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  NSString *oString = @"portrait";
+  NSString *oN = @"1";
   UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
   
   if(orientation == 0) //Default orientation
-    oString = @"portrait";
+    oN = @"1";
   else if(orientation == UIInterfaceOrientationPortrait)
-    oString = @"portrait";
+    oN = @"1";
   else if(orientation == UIInterfaceOrientationLandscapeLeft)
-    oString = @"landscape";
+    oN = @"0";
   else if(orientation == UIInterfaceOrientationLandscapeRight)
-    oString = @"landscape";
-  resolve(oString);
+    oN = @"0";
+  resolve(oN);
 }
 
 RCT_REMAP_METHOD(getDeviceName, resolver2:(RCTPromiseResolveBlock)resolve rejecter2:(RCTPromiseRejectBlock)reject)

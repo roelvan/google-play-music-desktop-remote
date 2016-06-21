@@ -35,7 +35,7 @@ export default class HomeScreen extends Component {
     }
     DeviceInfo.getDeviceOrientation()
       .then((o) => this.setState({
-        orientation: o === 1 ? 'PORTRAIT' : 'LANDSCAPE'
+        orientation: parseInt(o, 10) === 1 ? 'PORTRAIT' : 'LANDSCAPE'
       }))
   }
 
