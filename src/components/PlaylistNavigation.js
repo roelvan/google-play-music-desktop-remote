@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { ListView, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
+import { ListView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import colors from '../theme/colors'
 
 export default class PlaylistNavigation extends Component {
@@ -25,16 +25,15 @@ export default class PlaylistNavigation extends Component {
         )}
         renderRow={(playlist) => {
           return (
-            <TouchableNativeFeedback
+            <TouchableOpacity
               onPress={navigate(playlist)}
-              background={TouchableNativeFeedback.Ripple(colors.GREY_LIGHT, false)}
             >
               <View>
                 <View style={styles.listItem}>
                   <Text style={{ color: foreColor }}>{playlist.name}</Text>
                 </View>
               </View>
-            </TouchableNativeFeedback>
+            </TouchableOpacity>
           )
         }}
       />

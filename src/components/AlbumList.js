@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Image, ListView, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
+import { Image, ListView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import colors from '../theme/colors'
 
 export default class AlbumList extends Component {
@@ -21,9 +21,8 @@ export default class AlbumList extends Component {
           renderRow={(album, sectionID, rowID) => {
             const srcObj = { uri: album.albumArt || 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' }
             return (
-              <TouchableNativeFeedback
+              <TouchableOpacity
                 onPress={this.props.handlePress(album)}
-                background={TouchableNativeFeedback.SelectableBackground()}
               >
                 <View>
                   <View style={styles.album}>
@@ -34,7 +33,7 @@ export default class AlbumList extends Component {
                     </View>
                   </View>
                 </View>
-              </TouchableNativeFeedback>
+              </TouchableOpacity>
             )
           }}
         />

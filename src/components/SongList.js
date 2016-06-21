@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Image, ListView, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
+import { Image, ListView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import colors from '../theme/colors'
 
 export default class SongList extends Component {
@@ -28,9 +28,8 @@ export default class SongList extends Component {
               srcObj.uri = `https://play.google.com/music/ani_equalizer_${black ? 'black' : 'white'}_x2.gif`
             }
             return (
-              <TouchableNativeFeedback
+              <TouchableOpacity
                 onPress={this.props.handlePress(track)}
-                background={TouchableNativeFeedback.SelectableBackground()}
               >
                 <View>
                   <View style={styles.track}>
@@ -41,7 +40,7 @@ export default class SongList extends Component {
                     </View>
                   </View>
                 </View>
-              </TouchableNativeFeedback>
+              </TouchableOpacity>
             )
           }}
         />

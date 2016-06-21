@@ -1,5 +1,5 @@
 import { observable } from 'mobx'
-import { AsyncStorage, DeviceEventEmitter, NativeModules } from 'react-native'
+import { AlertIOS, AsyncStorage, DeviceEventEmitter, NativeModules, Platform } from 'react-native'
 const { DeviceInfo } = NativeModules
 
 export const TEST_IP_ADDRESS = '192.168.1.60'
@@ -97,11 +97,25 @@ export default class WebSocketStore {
     switch (channel) {
       case 'connect': {
         if (payload === 'CODE_REQUIRED') {
-          DeviceInfo.dialog(
-            'GPMDP Code Required',
-            'Input the 4 digit code that GPMDP is displaying on screen',
-            'Authenticate'
-          ).then((val) => {
+          let userInputPromise
+          if (Platform.OS === 'android') {
+            userInputPromise = DeviceInfo.dialog(
+              'GPMDP Code Required',
+              'Input the 4 digit code that GPMDP is displaying on screen',
+              'Authenticate'
+            )
+          } else {
+            userInputPromise = new Promise((resolve, reject) => {
+              AlertIOS.prompt(
+                'GPMDP Code Required',
+                'Input the 4 digit code that GPMDP is displaying on screen',
+                text => resolve(text),
+                'plain-text',
+                'Authenticate'
+              )
+            })
+          }
+          userInputPromise.then((val) => {
             this._sendMessage({ namespace: 'connect', method: 'connect', arguments: ['_', val] })
           })
         } else {

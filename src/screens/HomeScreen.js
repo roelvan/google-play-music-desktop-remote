@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
-import { Animated, BackAndroid, DrawerLayoutAndroid, DeviceEventEmitter, Image, NativeModules, StatusBar, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, BackAndroid, DeviceEventEmitter, Image, NativeModules, StatusBar, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
+import DrawerLayout from 'react-native-drawer-layout'
 import Zeroconf from 'react-native-zeroconf'
 import ControlBar from '../components/ControlBar'
 import PlaylistNavigation from '../components/PlaylistNavigation'
@@ -164,10 +165,10 @@ export default class HomeScreen extends Component {
     }
 
     return (
-      <DrawerLayoutAndroid
+      <DrawerLayout
         ref="drawer"
         drawerWidth={300}
-        drawerPosition={DrawerLayoutAndroid.positions.Left}
+        drawerPosition={DrawerLayout.positions.Left}
         renderNavigationView={() =>
           <PlaylistNavigation
             backgroundColor={themeStore.backgroundColor()} foreColor={themeStore.foreColor()}
@@ -225,7 +226,7 @@ export default class HomeScreen extends Component {
             </Animated.View>
           </View>
         </View>
-      </DrawerLayoutAndroid>
+      </DrawerLayout>
     )
   }
 }
