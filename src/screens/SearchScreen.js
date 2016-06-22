@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import { ScrollView, StatusBar, StyleSheet, TextInput, View } from 'react-native'
+import { ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native'
+import { MKTextField } from 'react-native-material-kit'
 import { observer } from 'mobx-react/native'
 import Toolbar from '../components/Toolbar'
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view'
@@ -47,16 +48,19 @@ export default class SearchScreen extends Component {
         <Toolbar title={'Search'} navigator={this.props.navigator} color={themeStore.barColor()} />
         <View style={styles.content}>
           <View style={styles.settingsContent}>
-            <TextInput
-              style={{ color: themeStore.foreColor() }}
+            <MKTextField
+              textInputStyle={{ color: themeStore.foreColor() }}
               autoCorrect={true}
               defaultValue={searchStore.searchText}
               keyboardType="web-search"
-              underlineColorAndroid={themeStore.highlightColor()}
+              underlineEnabled
+              underlineSize={2}
+              highlightColor={themeStore.highlightColor()}
               placeholder="Search text here..."
               placeholderTextColor={themeStore.foreColor()}
               onChangeText={this._updateSearchText}
               onSubmitEditing={this._search}
+              tintColor="#999"
             />
           </View>
           <ScrollableTabView

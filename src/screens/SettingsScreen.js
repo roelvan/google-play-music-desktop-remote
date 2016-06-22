@@ -1,12 +1,9 @@
 import React, { Component, PropTypes } from 'react'
-import { AsyncStorage, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native'
+import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import { observer } from 'mobx-react/native'
-import { getTheme } from 'react-native-material-kit'
+import { MKTextField } from 'react-native-material-kit'
 // import Zeroconf from 'react-native-zeroconf'
 import Toolbar from '../components/Toolbar'
-import colors from '../theme/colors'
-
-const theme = getTheme()
 
 @observer
 export default class SettingsScreen extends Component {
@@ -29,15 +26,17 @@ export default class SettingsScreen extends Component {
         <View style={styles.content}>
           <View style={styles.settingsContent}>
             <Text style={{ color: themeStore.foreColor() }}>GPMDP IP Address</Text>
-            <TextInput
-              style={{ color: themeStore.foreColor() }}
-              autoCorrect={false}
+            <MKTextField
+              textInputStyle={{ color: themeStore.foreColor() }}
               defaultValue={this.props.settingsStore.IP_ADDRESS === 'NOT_SET' ? '' : this.props.settingsStore.IP_ADDRESS}
               keyboardType="numeric"
-              underlineColorAndroid={themeStore.highlightColor()}
+              underlineEnabled
+              underlineSize={2}
+              highlightColor={themeStore.highlightColor()}
               placeholder="GPMDP IP Address"
               placeholderTextColor={themeStore.foreColor()}
               onChangeText={this._ipChanged}
+              tintColor="#999"
             />
           </View>
         </View>
