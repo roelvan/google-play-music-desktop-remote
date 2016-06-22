@@ -16,12 +16,14 @@ export default class WebSocketStore {
   @observable isConnected = false
   @observable lastMessage = null
   shouldReconnect = false
+  awaitingCode
 
   constructor (trackStore, themeStore, searchStore, port = TEST_PORT) {
     this.searchStore = searchStore
     this.trackStore = trackStore
     this.themeStore = themeStore
     this.port = port
+    this.awaitingCode = false
 
     this.hook()
   }
@@ -67,7 +69,7 @@ export default class WebSocketStore {
       .then((deviceName) => {
         AsyncStorage.getItem('AUTH_CODE')
           .then((value) => {
-            console.log(value)
+            this.awaitingCode = false
             this._sendMessage({ namespace: 'connect', method: 'connect', arguments: [deviceName, value] })
           })
           .catch(() => {})
@@ -97,6 +99,8 @@ export default class WebSocketStore {
     switch (channel) {
       case 'connect': {
         if (payload === 'CODE_REQUIRED') {
+          if (this.awaitingCode) break
+          this.awaitingCode = true
           let userInputPromise
           if (Platform.OS === 'android') {
             userInputPromise = DeviceInfo.dialog(
