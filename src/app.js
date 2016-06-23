@@ -46,20 +46,20 @@ export default class App extends Component {
     if (!this.state.loaded) return null
     return (
       <Navigator
-        initialRoute={{ name: 'zero' }}
+        initialRoute={{ name: 'remote' }}
         renderScene={(route, navigator) => {
           switch (route.name) {
             case 'playlist': {
               return (<PlaylistScreen navigator={navigator} webSocketStore={webSocketStore} playlist={route.playlist} themeStore={themeStore} />)
             }
-            case 'settings': {
+            case 'sss': {
               return (<SettingsScreen navigator={navigator} settingsStore={settingsStore} themeStore={themeStore} />)
             }
             case 'search': {
               return (<SearchScreen navigator={navigator} themeStore={themeStore} webSocketStore={webSocketStore} searchStore={searchStore} />)
             }
-            case 'zero': {
-              return (<ZeroConfScreen navigator={navigator} themeStore={themeStore} settingsStore={settingsStore} />)
+            case 'settings': {
+              return (<ZeroConfScreen navigator={navigator} themeStore={themeStore} settingsStore={settingsStore} webSocketStore={webSocketStore} />)
             }
             default:
             case 'remote': {
