@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import { Animated, BackAndroid, DeviceEventEmitter, Image, NativeModules, StatusBar, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { observer } from 'mobx-react/native'
 import DrawerLayout from 'react-native-drawer-layout'
-import Zeroconf from 'react-native-zeroconf'
 import ControlBar from '../components/ControlBar'
 import PlaylistNavigation from '../components/PlaylistNavigation'
 import ProgressSlider from '../components/ProgressSlider'
@@ -43,19 +42,6 @@ export default class HomeScreen extends Component {
     const { webSocketStore, settingsStore } = this.props
     webSocketStore.connect(settingsStore.IP_ADDRESS)
     this.CONNECTED_IP = settingsStore.IP_ADDRESS
-
-    this.zeroconf = new Zeroconf()
-    this.zeroconf.scan('GPMDP')
-    // this.zeroconf.scan('GPMDP')
-    this.zeroconf.on('start', () => console.log('start.'))
-    this.zeroconf.on('found', () => console.log('found'))
-    this.zeroconf.on('resolved', (service) => {
-      if (service.host !== this.CONNECTED_IP) {
-        console.log('found service, updating IP')
-        this.props.settingsStore.updateIPAddress(service.host)
-      }
-    })
-    this.zeroconf.on('error', () => console.log('error.'))
 
     DeviceEventEmitter.addListener('orientation', (data) => {
       this.setState({

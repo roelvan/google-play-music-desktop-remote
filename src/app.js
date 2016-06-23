@@ -10,6 +10,7 @@ import SettingsStore from './stores/SettingsStore'
 import ThemeStore from './stores/ThemeStore'
 import TrackStore from './stores/TrackStore'
 import WebSocketStore from './stores/WebSocketStore'
+import ZeroConfScreen from './screens/ZeroConfScreen'
 
 const searchStore = new SearchStore()
 const settingsStore = new SettingsStore()
@@ -45,7 +46,7 @@ export default class App extends Component {
     if (!this.state.loaded) return null
     return (
       <Navigator
-        initialRoute={{ name: 'remote' }}
+        initialRoute={{ name: 'zero' }}
         renderScene={(route, navigator) => {
           switch (route.name) {
             case 'playlist': {
@@ -56,6 +57,9 @@ export default class App extends Component {
             }
             case 'search': {
               return (<SearchScreen navigator={navigator} themeStore={themeStore} webSocketStore={webSocketStore} searchStore={searchStore} />)
+            }
+            case 'zero': {
+              return (<ZeroConfScreen navigator={navigator} themeStore={themeStore} settingsStore={settingsStore} />)
             }
             default:
             case 'remote': {
