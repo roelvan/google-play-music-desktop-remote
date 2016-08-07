@@ -129,7 +129,7 @@ export default class WebSocketStore {
         }
         break
       }
-      case 'song': {
+      case 'track': {
         const { title, artist, album } = payload
         const albumArt = payload.albumArt && payload.albumArt.replace(/=s90-c-e100$/g, '')
         this.trackStore.changeTrack(title, artist, album, albumArt)
