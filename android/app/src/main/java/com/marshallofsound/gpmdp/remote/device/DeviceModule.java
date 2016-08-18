@@ -1,5 +1,6 @@
 package com.marshallofsound.gpmdp.remote.device;
 
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.text.InputType;
@@ -66,8 +67,14 @@ public class DeviceModule extends ReactContextBaseJavaModule {
       .input("", null, false, new MaterialDialog.InputCallback() {
           @Override
           public void onInput(MaterialDialog dialog, CharSequence input) {
-              promise.resolve(input.toString());
+            promise.resolve(input.toString());
           }
+      })
+      .cancelListener(new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+          promise.reject("", "");
+        }
       })
       .show();
   }

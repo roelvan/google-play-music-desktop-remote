@@ -121,6 +121,10 @@ export default class WebSocketStore {
           }
           userInputPromise.then((val) => {
             this._sendMessage({ namespace: 'connect', method: 'connect', arguments: ['_', val] })
+            this.awaitingCode = false
+          })
+          .catch(() => {
+            this.awaitingCode = false
           })
         } else {
           AsyncStorage.setItem('AUTH_CODE', payload)
