@@ -52,7 +52,7 @@ export default class App extends Component {
             case 'playlist': {
               return (<PlaylistScreen navigator={navigator} webSocketStore={webSocketStore} playlist={route.playlist} themeStore={themeStore} />)
             }
-            case 'sss': {
+            case 'customip': {
               return (<SettingsScreen navigator={navigator} settingsStore={settingsStore} themeStore={themeStore} />)
             }
             case 'search': {

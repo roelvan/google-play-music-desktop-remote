@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
 import { observer } from 'mobx-react/native'
-import { MKSpinner } from 'react-native-material-kit'
+import { MKColor, MKSpinner, MKButton } from 'react-native-material-kit'
 import Zeroconf from 'react-native-zeroconf'
 import Toolbar from '../components/Toolbar'
 import TouchableView from '../components/TouchableView'
@@ -88,6 +88,26 @@ export default class ZeroConfScreen extends Component {
                 <MKSpinner style={styles.spinner} />
               )
             }
+            <MKButton
+              backgroundColor={themeStore.highlightColor()}
+              shadowRadius={2}
+              shadowOffset={{ width: 0, height: 2 }}
+              shadowOpacity={0.7}
+              shadowColor="black"
+              onPress={() => {
+                this.props.navigator.push({
+                  name: 'customip'
+                })
+              }}
+              style={{ padding: 12, marginTop: 14 }}
+            >
+              <Text
+                pointerEvents="none"
+                style={[{ color: themeStore.foreColor() }, styles.customIPButton]}
+              >
+                Set Custom IP
+              </Text>
+            </MKButton>
           </ScrollView>
         </View>
       </View>
@@ -126,5 +146,9 @@ const styles = StyleSheet.create({
   spinner: {
     height: 100,
     width: 100
+  },
+  customIPButton: {
+    fontWeight: 'bold',
+    textAlign: 'center'
   }
 })

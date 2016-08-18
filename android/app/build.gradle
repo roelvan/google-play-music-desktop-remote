@@ -78,13 +78,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
 
     defaultConfig {
         applicationId "com.marshallofsound.gpmdp.remote"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 24
 
         versionCode 1
         versionName "1.0.0"
@@ -92,6 +92,11 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+    }
+    // Flag to tell aapt to keep the attribute ids around
+    // This is handled for you by the 2.0+ Gradle Plugin
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
     }
     play {
         track = 'alpha'
@@ -154,8 +159,9 @@ dependencies {
     compile project(':react-native-material-kit')
     compile project(':react-native-zeroconf')
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
-    compile 'com.afollestad.material-dialogs:core:+'
+    compile "com.android.support:appcompat-v7:24.0.0"
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.1'
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-vector-icons')
 }

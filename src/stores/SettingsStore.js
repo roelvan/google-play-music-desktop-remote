@@ -13,6 +13,6 @@ export default class SettingsStore {
     AsyncStorage.setItem('IP_ADDRESS', newIP)
       .then(() => {})
       .catch(() => {})
-    this.IP_ADDRESS = newIP
+    this.IP_ADDRESS = newIP || 'NOT_SET'
   }
 }

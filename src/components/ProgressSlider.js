@@ -26,7 +26,7 @@ export default class ProgressSlider extends React.Component {
     if (nextProps.value === this.props.value || this.state.isTouched) {
       return false
     }
-    this.refs.slider.value = nextProps.value
+    this.refs.slider._internalSetValue(nextProps.value, false)
     return true
   }
 
@@ -40,13 +40,14 @@ export default class ProgressSlider extends React.Component {
   }
 
   render () {
-    const { highlightColor, min, max } = this.props
+    const { highlightColor, min, max, value } = this.props
     return (
       <CustomSlider
         ref={'slider'}
         style={styles.slider}
         min={min}
         max={max}
+        value={value}
         trackSize={6}
         onPress={this._handlePress}
         onConfirm={this._handleConfirm}

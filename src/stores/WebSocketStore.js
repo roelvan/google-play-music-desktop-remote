@@ -143,6 +143,7 @@ export default class WebSocketStore {
         this.trackStore.setPlayingStatus(isPlaying)
         break
       }
+      case 'playback-time':
       case 'time': {
         this.trackStore.updateTime(payload.current, payload.total)
         this.trackStore.start()
@@ -236,7 +237,7 @@ export default class WebSocketStore {
   }
 
   sendSetTime = (time) => {
-    this._sendMessage({ namespace: 'playback', method: 'setPlaybackTime', arguments: [time] })
+    this._sendMessage({ namespace: 'playback', method: 'setCurrentTime', arguments: [time] })
     this.trackStore.stop()
   }
 
