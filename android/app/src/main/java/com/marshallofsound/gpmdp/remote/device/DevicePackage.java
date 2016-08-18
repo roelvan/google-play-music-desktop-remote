@@ -14,33 +14,33 @@ import java.util.List;
 
 public class DevicePackage implements ReactPackage {
 
-  private DeviceModule dm = null;
+    private DeviceModule dm = null;
 
-  @Override
-  public List<Class<? extends JavaScriptModule>> createJSModules() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-    return Collections.emptyList();
-  }
-
-  public void configurationUpdate(Configuration config) {
-    if (dm != null) {
-      dm.configurationUpdate(config);
+    @Override
+    public List<Class<? extends JavaScriptModule>> createJSModules() {
+        return Collections.emptyList();
     }
-  }
 
-  @Override
-  public List<NativeModule> createNativeModules(
-          ReactApplicationContext reactContext) {
-    List<NativeModule> modules = new ArrayList<>();
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        return Collections.emptyList();
+    }
 
-    dm = new DeviceModule(reactContext);
+    public void configurationUpdate(Configuration config) {
+        if (dm != null) {
+            dm.configurationUpdate(config);
+        }
+    }
 
-    modules.add(dm);
+    @Override
+    public List<NativeModule> createNativeModules(
+            ReactApplicationContext reactContext) {
+        List<NativeModule> modules = new ArrayList<>();
 
-    return modules;
-  }
+        dm = new DeviceModule(reactContext);
+
+        modules.add(dm);
+
+        return modules;
+    }
 }

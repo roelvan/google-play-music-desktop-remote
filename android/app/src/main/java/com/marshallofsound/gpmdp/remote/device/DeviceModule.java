@@ -17,65 +17,65 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class DeviceModule extends ReactContextBaseJavaModule {
-  private ReactContext reactContext;
+    private ReactContext reactContext;
 
-  public DeviceModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-    this.reactContext = reactContext;
-  }
-
-  @Override
-  public String getName() {
-    return "DeviceInfo";
-  }
-
-  private void emitEvent(String eventName, @Nullable WritableMap params) {
-    reactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(eventName, params);
-  }
-
-  public void configurationUpdate(Configuration config) {
-    WritableMap params = new WritableNativeMap();
-    if(config.orientation == Configuration.ORIENTATION_LANDSCAPE){
-      params.putString("orientation", "LANDSCAPE");
-    }else{
-      params.putString("orientation", "PORTRAIT");
+    public DeviceModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.reactContext = reactContext;
     }
-    this.emitEvent("orientation", params);
-  }
 
-  @ReactMethod
-  public void getDeviceName(Promise promise) {
-      promise.resolve(android.os.Build.MODEL);
-  }
+    @Override
+    public String getName() {
+        return "DeviceInfo";
+    }
 
-  @ReactMethod
-  public void getDeviceOrientation(Promise promise) {
-    promise.resolve(reactContext.getResources().getConfiguration().orientation);
-  }
+    private void emitEvent(String eventName, @Nullable WritableMap params) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
 
-  @ReactMethod
-  public void dialog(String title, String content, String positiveText, final Promise promise) {
-    if (getCurrentActivity() == null) return;
-    final CharSequence[] cs = new CharSequence[1];
-    new MaterialDialog.Builder(getCurrentActivity())
-      .title(title)
-      .content(content)
-      .positiveText(positiveText)
-      .inputType(InputType.TYPE_CLASS_TEXT)
-      .input("", null, false, new MaterialDialog.InputCallback() {
-          @Override
-          public void onInput(MaterialDialog dialog, CharSequence input) {
-            promise.resolve(input.toString());
-          }
-      })
-      .cancelListener(new DialogInterface.OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialogInterface) {
-          promise.reject("", "");
+    public void configurationUpdate(Configuration config) {
+        WritableMap params = new WritableNativeMap();
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            params.putString("orientation", "LANDSCAPE");
+        } else {
+            params.putString("orientation", "PORTRAIT");
         }
-      })
-      .show();
-  }
+        this.emitEvent("orientation", params);
+    }
+
+    @ReactMethod
+    public void getDeviceName(Promise promise) {
+        promise.resolve(android.os.Build.MODEL);
+    }
+
+    @ReactMethod
+    public void getDeviceOrientation(Promise promise) {
+        promise.resolve(reactContext.getResources().getConfiguration().orientation);
+    }
+
+    @ReactMethod
+    public void dialog(String title, String content, String positiveText, final Promise promise) {
+        if (getCurrentActivity() == null) return;
+        final CharSequence[] cs = new CharSequence[1];
+        new MaterialDialog.Builder(getCurrentActivity())
+            .title(title)
+            .content(content)
+            .positiveText(positiveText)
+            .inputType(InputType.TYPE_CLASS_TEXT)
+            .input("", null, false, new MaterialDialog.InputCallback() {
+                @Override
+                public void onInput(MaterialDialog dialog, CharSequence input) {
+                    promise.resolve(input.toString());
+                }
+            })
+            .cancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    promise.reject("", "");
+                }
+            })
+            .show();
+    }
 }
