@@ -44,6 +44,10 @@ export default class WebSocketStore {
   }
 
   connect (ip) {
+    ip = ip.trim() // eslint-disable-line
+    if (!ip) {
+      return
+    }
     this.isConnecting = true
     try {
       this.ipAddress = ip
