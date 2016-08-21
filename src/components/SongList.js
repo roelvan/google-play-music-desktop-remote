@@ -4,8 +4,8 @@ import colors from '../theme/colors'
 
 export default class SongList extends Component {
   static propTypes = {
+    alphabet: PropTypes.bool,
     black: PropTypes.bool,
-    data: PropTypes.object,
     handlePress: PropTypes.func
   }
 
@@ -15,14 +15,21 @@ export default class SongList extends Component {
   }
 
   render () {
-    const { black, data } = this.props
+    const { black, data } = this.props // eslint-disable-line
+
+    let theData = data
+    if (Array.isArray(theData)) {
+      theData = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1.id !== r2.id })
+      theData = theData.cloneWithRows(data)
+    }
 
     return (
       <View style={{ flex: 1 }}>
         <ListView
-          dataSource={data}
+          dataSource={theData}
           style={{ flex: 1 }}
           renderRow={(track, sectionID, rowID) => {
+            console.log('RENDER ROW')
             const srcObj = { uri: track.albumArt || 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' }
             if (track.playing) {
               srcObj.uri = `https://play.google.com/music/ani_equalizer_${black ? 'black' : 'white'}_x2.gif`

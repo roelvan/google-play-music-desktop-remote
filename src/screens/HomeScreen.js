@@ -1,21 +1,20 @@
 import React, { Component, PropTypes } from 'react'
-import { Animated, BackAndroid, DeviceEventEmitter, Image, NativeModules, StatusBar, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { BackAndroid, StatusBar, StyleSheet, View } from 'react-native'
 import { observer } from 'mobx-react/native'
 import DrawerLayout from 'react-native-drawer-layout'
-import ControlBar from '../components/ControlBar'
-import PlaylistNavigation from '../components/PlaylistNavigation'
-import ProgressSlider from '../components/ProgressSlider'
-import Queue from '../components/Queue'
-import SongInfo from '../components/SongInfo'
-import Toolbar from '../components/Toolbar'
-import colors from '../theme/colors'
+import Navigation from '../components/Navigation'
 
-const { DeviceInfo } = NativeModules
+import PlaylistsView from '../views/PlaylistsView'
+import RemoteView from '../views/RemoteView'
+import SearchView from '../views/SearchView'
+import TracksView from '../views/TracksView'
 
 @observer
 export default class HomeScreen extends Component {
   static propTypes = {
+    libraryStore: PropTypes.object,
     navigator: PropTypes.object,
+    searchStore: PropTypes.object,
     settingsStore: PropTypes.object,
     trackStore: PropTypes.object,
     themeStore: PropTypes.object,
@@ -26,28 +25,14 @@ export default class HomeScreen extends Component {
     super(...args)
 
     this.state = {
-      bouncing: false,
-      bounceDownValue: new Animated.Value(0),
-      bounceUpValue: new Animated.Value(0),
-      orientation: 'PORTRAIT',
-      showQueue: false
+      view: 'remote'
     }
-    DeviceInfo.getDeviceOrientation()
-      .then((o) => this.setState({
-        orientation: parseInt(o, 10) === 1 ? 'PORTRAIT' : 'LANDSCAPE'
-      }))
   }
 
   componentDidMount () {
     const { webSocketStore, settingsStore } = this.props
     webSocketStore.connect(settingsStore.IP_ADDRESS)
     this.CONNECTED_IP = settingsStore.IP_ADDRESS
-
-    DeviceEventEmitter.addListener('orientation', (data) => {
-      this.setState({
-        orientation: data.orientation
-      })
-    })
 
     BackAndroid.addEventListener('hardwareBackPress', () => {
       if (this.props.navigator && this.props.navigator.getCurrentRoutes().length > 1) {
@@ -67,47 +52,12 @@ export default class HomeScreen extends Component {
     }
   }
 
-  _imageTap = () => {
+  _handleNavigation = (viewName) => {
+    this.refs.drawer.closeDrawer()
     this.setState({
-      bouncing: !this.state.bouncing
+      view: viewName
     })
-    Animated.timing(this.state.bounceDownValue,
-      {
-        toValue: this.state.bouncing ? 0 : 128,
-        duration: 400
-      }
-    ).start()
-    Animated.timing(this.state.bounceUpValue,
-      {
-        toValue: this.state.bouncing ? 0 : -60,
-        duration: 400
-      }
-    ).start()
   }
-
-  _handlePlayPress = () => this.props.webSocketStore.sendPlay()
-
-  _handlePrevPress = () => {
-    this.props.webSocketStore.sendPrev()
-    this.props.trackStore.stop()
-  }
-
-  _handleNextPress = () => {
-    this.props.webSocketStore.sendNext()
-    this.props.trackStore.stop()
-  }
-
-  _handleShufflePress = () => {
-    this.props.webSocketStore.sendToggleShuffle()
-    this.props.webSocketStore.sendGetShuffle()
-  }
-
-  _handleRepeatPress = () => {
-    this.props.webSocketStore.sendToggleRepeat()
-    this.props.webSocketStore.sendGetRepeat()
-  }
-
-  _handleProgressBarTouch = (value) => this.props.webSocketStore.sendSetTime(value)
 
   _handlePlaylistNavigation = (playlist) =>
     () => {
@@ -118,36 +68,58 @@ export default class HomeScreen extends Component {
       })
     }
 
-  _handleSongInfoPress = () => {
-    this.setState({
-      showQueue: !this.state.showQueue
-    })
-  }
-
   render () {
-    let { title, artist, album, albumArt, isPlaying,
-      isStopped, currentTime, totalTime, repeatMode, shuffleMode } = this.props.trackStore
-    const { playlistsDataStore, queueDataStore } = this.props.trackStore
-    const { isConnected } = this.props.webSocketStore
     const { themeStore } = this.props
 
-    if (!isConnected) {
-      title = 'Not Connected'
-      artist = 'Check your settings'
-      album = ''
-      albumArt = 'NOT_CONNECTED'
+    const props = {
+      openDrawer: () => this.refs.drawer.openDrawer()
     }
 
-    let art = albumArt
-    if (art === 'NOT_CONNECTED') {
-      art = require('../components/img/cloud-off.png') // eslint-disable-line
-    } else {
-      art = { uri: art === null ? 'http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg' : `${art}=s1000-c-e1200` }
-    }
-
-    let queueBottom = 0
-    if (!this.state.bouncing) {
-      queueBottom = this.state.orientation === 'LANDSCAPE' ? 65 : 100
+    let view
+    switch (this.state.view) {
+      case 'tracks': {
+        view = (
+          <TracksView
+            navigator={this.props.navigator} settingsStore={this.props.settingsStore}
+            trackStore={this.props.trackStore} themeStore={this.props.themeStore}
+            webSocketStore={this.props.webSocketStore} libraryStore={this.props.libraryStore}
+            {...props}
+          />
+        )
+        break
+      }
+      case 'playlists': {
+        view = (
+          <PlaylistsView
+            playlistsDataStore={this.props.trackStore.playlistsDataStore} themeStore={this.props.themeStore}
+            navigate={this._handlePlaylistNavigation} webSocketStore={this.props.webSocketStore}
+            handleNavigate={this._handleNavigation}
+            {...props}
+          />
+        )
+        break
+      }
+      case 'search': {
+        view = (
+          <SearchView
+            navigator={this.props.navigator} settingsStore={this.props.settingsStore}
+            trackStore={this.props.trackStore} themeStore={this.props.themeStore}
+            webSocketStore={this.props.webSocketStore} searchStore={this.props.searchStore}
+            {...props}
+          />
+        )
+        break
+      }
+      case 'remote':
+      default: {
+        view = (
+          <RemoteView
+            navigator={this.props.navigator} settingsStore={this.props.settingsStore}
+            trackStore={this.props.trackStore} themeStore={this.props.themeStore}
+            webSocketStore={this.props.webSocketStore} {...props}
+          />
+        )
+      }
     }
 
     return (
@@ -156,61 +128,16 @@ export default class HomeScreen extends Component {
         drawerWidth={300}
         drawerPosition={DrawerLayout.positions.Left}
         renderNavigationView={() =>
-          <PlaylistNavigation
+          <Navigation
             backgroundColor={themeStore.backgroundColor()} foreColor={themeStore.foreColor()}
-            playlistsDataStore={playlistsDataStore} navigate={this._handlePlaylistNavigation}
+            navigate={this._handleNavigation} active={this.state.view}
           />}
       >
         <View style={[styles.container, { backgroundColor: this.props.themeStore.backgroundColor() }]}>
           <StatusBar animated hidden={this.state.bouncing} backgroundColor={this.props.themeStore.barColor()} />
-          <View style={styles.content}>
-            <View style={{ flex: 1, alignItems: 'center' }}>
-              <TouchableWithoutFeedback onPress={this._imageTap}>
-                <Image
-                  source={art}
-                  style={[styles.artImage, {
-                    resizeMode: !art.uri ? 'contain' : 'cover',
-                    margin: !art.uri ? 24 : 0
-                  }]}
-                />
-              </TouchableWithoutFeedback>
-            </View>
-            {
-              this.state.showQueue ?
-              (
-                <Animated.View style={[styles.queue, { opacity: this.state.queueOpacity, top: this.state.bouncing ? 46 : 106, bottom: queueBottom }]} >
-                  <Queue data={queueDataStore} webSocketStore={this.props.webSocketStore} />
-                </Animated.View>
-              )
-              : null
-            }
-            <Animated.View style={[styles.toolbar, { transform: [{ translateY: this.state.bounceUpValue }] }]} >
-              <Toolbar title={'Home'} color={themeStore.barColor()} navigator={this.props.navigator} settingsMenu showDrawer drawerFunction={() => { this.refs.drawer.openDrawer() }} />
-            </Animated.View>
-            <Animated.View style={[styles.toolbarSongInfo, { transform: [{ translateY: this.state.bounceUpValue }] }]} >
-              <SongInfo title={title} artist={artist} album={album} onPress={this._handleSongInfoPress} />
-            </Animated.View>
-            <Animated.View style={[styles.controlBar, { transform: [{ translateY: this.state.bounceDownValue }] }]} >
-              <ControlBar
-                backgroundColor={themeStore.backgroundColor()} foreColor={themeStore.foreColor()} highlightColor={themeStore.highlightColor()}
-                isPlaying={isPlaying} isStopped={isStopped} landscape={this.state.orientation === 'LANDSCAPE'}
-                repeatMode={repeatMode} shuffleMode={shuffleMode} themeStore={this.props.themeStore}
-                onPlayPress={this._handlePlayPress} onPrevPress={this._handlePrevPress} onNextPress={this._handleNextPress}
-                onShufflePress={this._handleShufflePress} onRepeatPress={this._handleRepeatPress}
-              />
-            </Animated.View>
-            <Animated.View
-              style={[styles.progress, {
-                bottom: this.state.orientation === 'LANDSCAPE' ? 52 : 85,
-                transform: [{ translateY: this.state.bounceDownValue }]
-              }]}
-            >
-              <ProgressSlider
-                ref={'progressSlider'} min={0} max={totalTime} highlightColor={themeStore.highlightColor()}
-                value={currentTime} onValueChange={this._handleProgressBarTouch}
-              />
-            </Animated.View>
-          </View>
+          {
+            view
+          }
         </View>
       </DrawerLayout>
     )
@@ -221,56 +148,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'stretch'
-  },
-  content: {
-    flex: 1,
-    backgroundColor: colors.GREY_LIGHTER,
-    alignItems: 'stretch'
-  },
-  controlBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flex: 0,
-    height: null,
-    elevation: 4
-  },
-  listItem: {
-    margin: 12
-  },
-  progress: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    elevation: 9
-  },
-  toolbar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    elevation: 10
-  },
-  toolbarSongInfo: {
-    position: 'absolute',
-    top: 56,
-    left: 0,
-    right: 0,
-    elevation: 10
-  },
-  artImage: {
-    flex: 1,
-    alignSelf: 'stretch',
-    top: 0,
-    height: null,
-    width: null
-  },
-  queue: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    elevation: 8
   }
 })

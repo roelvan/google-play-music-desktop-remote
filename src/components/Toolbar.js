@@ -5,6 +5,7 @@ import colors from '../theme/colors'
 
 export default class Toolbar extends Component {
   static propTypes = {
+    backFn: PropTypes.func,
     color: PropTypes.string,
     drawerFunction: PropTypes.func,
     navigator: PropTypes.object,
@@ -34,15 +35,16 @@ export default class Toolbar extends Component {
   }
 
   _backButtonPressed = () => {
-    this.props.navigator.pop()
+    if (this.props.backFn) {
+      this.props.backFn()
+    } else {
+      this.props.navigator.pop()
+    }
   }
 
   render () {
     const { color, title, settingsMenu, showDrawer, drawerFunction } = this.props
     const actions = [
-      {
-        title: 'Search'
-      },
       {
         title: 'Settings'
       }

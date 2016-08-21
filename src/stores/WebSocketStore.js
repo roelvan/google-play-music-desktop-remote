@@ -9,6 +9,7 @@ export default class WebSocketStore {
   searchStore
   themeStore
   trackStore
+  libraryStore
   @observable ipAddress
   @observable port
   @observable webSocket = null
@@ -18,10 +19,11 @@ export default class WebSocketStore {
   shouldReconnect = false
   awaitingCode
 
-  constructor (trackStore, themeStore, searchStore, port = TEST_PORT) {
+  constructor (trackStore, themeStore, searchStore, libraryStore, port = TEST_PORT) {
     this.searchStore = searchStore
     this.trackStore = trackStore
     this.themeStore = themeStore
+    this.libraryStore = libraryStore
     this.port = port
     this.awaitingCode = false
 
@@ -174,6 +176,10 @@ export default class WebSocketStore {
         this.searchStore.setSearchResults(payload)
         break
       }
+      case 'library': {
+        this.libraryStore.setLibrary(payload)
+        break
+      }
       case 'settings:theme': {
         this.themeStore.setThemeEnabled(payload)
         this.trackStore.forceUpdatePlaylists()
@@ -204,6 +210,10 @@ export default class WebSocketStore {
     this._sendMessage({ namespace: 'playlists', method: 'playWithTrack', arguments: [playlist, track] })
   }
 
+  sendPlayPlaylist = (playlist) => {
+    this._sendMessage({ namespace: 'playlists', method: 'play', arguments: [playlist] })
+  }
+
   sendPlayQueueTrack = (track) => {
     this._sendMessage({ namespace: 'queue', method: 'playTrack', arguments: [track] })
   }
@@ -226,6 +236,10 @@ export default class WebSocketStore {
 
   sendGetRepeat = () => {
     this._sendMessage({ namespace: 'playback', method: 'getRepeat' })
+  }
+
+  sendLibraryPlayTrack = (track) => {
+    this._sendMessage({ namespace: 'library', method: 'playTrack', arguments: [track] })
   }
 
   sendToggleRepeat = () => {

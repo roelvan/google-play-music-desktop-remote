@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { MKTextField } from 'react-native-material-kit'
 import { observer } from 'mobx-react/native'
 import Toolbar from '../components/Toolbar'
@@ -9,13 +9,14 @@ import ArtistList from '../components/ArtistList'
 import SongList from '../components/SongList'
 
 @observer
-export default class SearchScreen extends Component {
+export default class SearchView extends Component {
   static propTypes = {
     navigator: PropTypes.object,
     searchStore: PropTypes.object,
     settingsStore: PropTypes.object,
     themeStore: PropTypes.object,
-    webSocketStore: PropTypes.object
+    webSocketStore: PropTypes.object,
+    openDrawer: PropTypes.func
   }
 
   constructor (...args) {
@@ -44,8 +45,7 @@ export default class SearchScreen extends Component {
     const { searchStore, themeStore } = this.props
     return (
       <View style={[styles.container, { backgroundColor: themeStore.backgroundColor() }]}>
-        <StatusBar animated backgroundColor={themeStore.barColor()} />
-        <Toolbar title={'Search'} navigator={this.props.navigator} color={themeStore.barColor()} />
+        <Toolbar title={'Search'} navigator={this.props.navigator} color={themeStore.barColor()} settingsMenu showDrawer drawerFunction={() => { this.props.openDrawer() }} />
         <View style={styles.content}>
           <View style={styles.settingsContent}>
             <MKTextField
