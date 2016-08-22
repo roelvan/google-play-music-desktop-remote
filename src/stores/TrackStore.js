@@ -1,5 +1,5 @@
 import { observable } from 'mobx'
-import { ListView } from 'react-native'
+import { ListView, NativeModules } from 'react-native'
 
 export default class TrackStore {
   @observable title = null
@@ -22,16 +22,19 @@ export default class TrackStore {
     this.artist = artist
     this.album = album
     this.albumArt = albumArt
+    NativeModules.MediaAndroid.updateMetaData(title, artist, album, albumArt)
     this.updateQueue(this.queue)
   }
 
   setPlayingStatus = (isPlaying) => {
     this.isPlaying = isPlaying
+    NativeModules.MediaAndroid.updatePlayState(isPlaying)
   }
 
   updateTime = (currentTime, totalTime) => {
     this.currentTime = currentTime
     this.totalTime = totalTime
+    NativeModules.MediaAndroid.updatePlaybackPosition(currentTime, totalTime)
   }
 
   updateRepeatMode = (repeatMode) => {

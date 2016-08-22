@@ -1,6 +1,6 @@
 import { observable } from 'mobx'
 import { AlertIOS, AsyncStorage, DeviceEventEmitter, NativeModules, Platform } from 'react-native'
-const { DeviceInfo } = NativeModules
+const { DeviceInfo, MediaAndroid } = NativeModules
 
 export const TEST_IP_ADDRESS = '192.168.1.60'
 export const TEST_PORT = 5672
@@ -41,11 +41,26 @@ export default class WebSocketStore {
         this._sendMessage({ namespace: 'volume', method: 'decreaseVolume' })
       }
     })
+    DeviceEventEmitter.addListener('prev_track', () => {
+      if (this.isConnected) {
+        this.sendPrev()
+      }
+    })
+    DeviceEventEmitter.addListener('play_pause_track', () => {
+      if (this.isConnected) {
+        this.sendPlay()
+      }
+    })
+    DeviceEventEmitter.addListener('next_track', () => {
+      if (this.isConnected) {
+        this.sendNext()
+      }
+    })
   }
 
   connect (ip) {
     ip = ip.trim() // eslint-disable-line
-    if (!ip) {
+    if (!ip || ip === 'NOT_SET') {
       return
     }
     this.isConnecting = true
@@ -60,11 +75,15 @@ export default class WebSocketStore {
     this.webSocket.onerror = this._onConnectioError
     this.webSocket.onmessage = this._onMessage
     this.webSocket.onclose = this._onConnectionClose
+
+    MediaAndroid.createNotification()
   }
 
   disconnect = () => {
     this.shouldReconnect = false
-    this.webSocket.close()
+    if (this.webSocket && this.isConnected) {
+      this.webSocket.close()
+    }
     this.webSocket = null
   }
 

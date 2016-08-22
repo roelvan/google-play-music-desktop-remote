@@ -1,27 +1,29 @@
 package com.marshallofsound.gpmdp.remote;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.balthazargronon.react.ZeroconfReactPackage;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.github.xinthink.rnmk.ReactMaterialKitPackage;
+import com.marshallofsound.gpmdp.remote.device.DevicePackage;
+import com.marshallofsound.gpmdp.remote.media.MediaPackage;
+import com.marshallofsound.gpmdp.remote.volume.VolumePackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.xinthink.rnmk.ReactMaterialKitPackage;
-import com.marshallofsound.gpmdp.remote.volume.VolumePackage;
-import com.marshallofsound.gpmdp.remote.device.DevicePackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.balthazargronon.react.ZeroconfReactPackage;
-
 public class MainActivity extends ReactActivity {
     private VolumePackage vP = null;
     private DevicePackage dP = null;
+    private MediaPackage mP = null;
 
     private boolean once = true;
 
@@ -31,6 +33,9 @@ public class MainActivity extends ReactActivity {
         if (once && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             once = false;
 //            enableImmersiveMode(decorView);
+        }
+        if (mP != null) {
+            mP.createNotification();
         }
         super.onCreate(a);
     }
@@ -82,17 +87,18 @@ public class MainActivity extends ReactActivity {
      * A list of packages used by the app. If the app uses additional views
      * or modules besides the default ones, add more packages here.
      */
-    @Override
     protected List<ReactPackage> getPackages() {
         vP = new VolumePackage();
         dP = new DevicePackage();
+        mP = new MediaPackage();
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new ZeroconfReactPackage(),
             new ReactMaterialKitPackage(),
             new VectorIconsPackage(),
             dP,
-            vP
+            vP,
+            mP
         );
     }
 
