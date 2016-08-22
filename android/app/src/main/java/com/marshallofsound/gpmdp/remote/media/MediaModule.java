@@ -15,6 +15,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
 
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -43,10 +44,30 @@ public class MediaModule extends ReactContextBaseJavaModule {
 
     private static MediaModule _instance  = null;
 
-    public MediaModule(ReactApplicationContext reactContext) {
+    public MediaModule(final ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
         sReactContext = reactContext;
+        sReactContext.addLifecycleEventListener(new LifecycleEventListener() {
+            @Override
+            public void onHostResume() {
+
+            }
+
+            @Override
+            public void onHostPause() {
+
+            }
+
+            @Override
+            public void onHostDestroy() {
+                NotificationManager mNotificationManager =
+                        (NotificationManager) reactContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                mNotificationManager.cancelAll();
+                mediaSession.setActive(false);
+            }
+        });
     }
 
     @Override
@@ -91,7 +112,8 @@ public class MediaModule extends ReactContextBaseJavaModule {
         builder = new NotificationCompat.Builder(reactContext)
                 .setSmallIcon(R.drawable.ic_headset_white_48dp)
                 .setStyle(new NotificationCompat.MediaStyle()
-                .setMediaSession(mediaSession.getSessionToken()));
+                .setMediaSession(mediaSession.getSessionToken()))
+                .
     }
 
     @ReactMethod
