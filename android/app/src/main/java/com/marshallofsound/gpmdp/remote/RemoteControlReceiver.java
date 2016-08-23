@@ -17,17 +17,17 @@ public class RemoteControlReceiver extends BroadcastReceiver {
             if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
                 switch (event.getKeyCode()) {
                     case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                        MediaModule.sEmitEvent("play_pause_track", null);
+                        InternalMediaService.getInstance().emitEvent("play_pause_track");
                         break;
                 }
             }
         }
-        if (intent.getAction().equals(MediaModule.PREV_INTENT_ACTION)) {
-            MediaModule.sEmitEvent("prev_track", null);
-        } else if (intent.getAction().equals(MediaModule.PLAYPAUSE_INTENT_ACTION)) {
-            MediaModule.sEmitEvent("play_pause_track", null);
-        } else if (intent.getAction().equals(MediaModule.NEXT_INTENT_ACTION)) {
-            MediaModule.sEmitEvent("next_track", null);
+        if (intent.getAction().equals(InternalMediaService.PREV_INTENT_ACTION)) {
+            InternalMediaService.getInstance().emitEvent("prev_track");
+        } else if (intent.getAction().equals(InternalMediaService.PLAYPAUSE_INTENT_ACTION)) {
+            InternalMediaService.getInstance().emitEvent("play_pause_track");
+        } else if (intent.getAction().equals(InternalMediaService.NEXT_INTENT_ACTION)) {
+            InternalMediaService.getInstance().emitEvent("next_track");
         }
     }
 }

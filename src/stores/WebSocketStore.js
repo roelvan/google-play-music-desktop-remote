@@ -1,6 +1,6 @@
 import { observable } from 'mobx'
 import { AlertIOS, AsyncStorage, DeviceEventEmitter, NativeModules, Platform } from 'react-native'
-const { DeviceInfo, MediaAndroid } = NativeModules
+const { DeviceInfo, MediaAndroid, BackgroundWebSocket } = NativeModules
 
 export const TEST_IP_ADDRESS = '192.168.1.60'
 export const TEST_PORT = 5672
@@ -15,6 +15,7 @@ export default class WebSocketStore {
   @observable webSocket = null
   @observable isConnecting = false
   @observable isConnected = false
+  @observable isWaiting = false
   @observable lastMessage = null
   shouldReconnect = false
   awaitingCode
@@ -28,6 +29,7 @@ export default class WebSocketStore {
     this.awaitingCode = false
 
     this.hook()
+    this._q = []
   }
 
   hook = () => {
@@ -56,38 +58,43 @@ export default class WebSocketStore {
         this.sendNext()
       }
     })
+    DeviceEventEmitter.addListener('WebSocket:Open', (...args) => this._onConnectionOpen(...args))
+    DeviceEventEmitter.addListener('WebSocket:Error', (...args) => this._onConnectioError(...args))
+    DeviceEventEmitter.addListener('WebSocket:Message', (data) => this._onMessage(data.msg))
+    DeviceEventEmitter.addListener('WebSocket:Close', (...args) => this._onConnectionClose(...args))
   }
 
-  connect (ip) {
+  connect = (ip) => {
     ip = ip.trim() // eslint-disable-line
     if (!ip || ip === 'NOT_SET') {
       return
     }
     this.isConnecting = true
+    this.isWaiting = false
     try {
       this.ipAddress = ip
-      this.webSocket = new WebSocket(`ws://${this.ipAddress}:${this.port}`)
+      BackgroundWebSocket.connect(this.ipAddress)
       this.shouldReconnect = true
     } catch (err) {
       this.disconnect()
     }
-    this.webSocket.onopen = this._onConnectionOpen
-    this.webSocket.onerror = this._onConnectioError
-    this.webSocket.onmessage = this._onMessage
-    this.webSocket.onclose = this._onConnectionClose
-
-    MediaAndroid.createNotification()
   }
 
   disconnect = () => {
     this.shouldReconnect = false
-    if (this.webSocket && this.isConnected) {
-      this.webSocket.close()
-    }
-    this.webSocket = null
+    BackgroundWebSocket.disconnect()
   }
 
   _onConnectionOpen = () => {
+    this.isWaiting = true
+    setTimeout(() => {
+      this._q.forEach((dataPacket) => {
+        this._onMessage(dataPacket.data, true)
+      })
+      setTimeout(() => {
+        this.isWaiting = false
+      }, 500)
+    }, 2000)
     this.isConnecting = false
     this.isConnected = true
     DeviceInfo.getDeviceName()
@@ -118,7 +125,14 @@ export default class WebSocketStore {
     }
   }
 
-  _onMessage = (msg) => {
+  _onMessage = (msgText, force) => {
+    const msg = {
+      data: msgText
+    }
+    if (this.isWaiting && !force) {
+      this._q.push(msg)
+      return
+    }
     this.lastMessage = msg
     const { channel, payload } = JSON.parse(msg.data)
     switch (channel) {
@@ -283,9 +297,7 @@ export default class WebSocketStore {
   }
 
   _sendMessage = (msg) => {
-    if (this.webSocket.readyState === 1) {
-      this.webSocket.send(JSON.stringify(msg))
-    }
+    BackgroundWebSocket.send(JSON.stringify(msg))
   }
 
 }

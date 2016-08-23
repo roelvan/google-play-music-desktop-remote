@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { BackAndroid, StatusBar, StyleSheet, View } from 'react-native'
 import { observer } from 'mobx-react/native'
 import DrawerLayout from 'react-native-drawer-layout'
+import { MKSpinner } from 'react-native-material-kit'
 import Navigation from '../components/Navigation'
 
 import PlaylistsView from '../views/PlaylistsView'
@@ -139,6 +140,15 @@ export default class HomeScreen extends Component {
             view
           }
         </View>
+        {
+          this.props.webSocketStore.isWaiting ?
+          (
+            <View style={styles.waitingOverlay}>
+              <MKSpinner style={styles.spinner} />
+            </View>
+          )
+          : null
+        }
       </DrawerLayout>
     )
   }
@@ -148,5 +158,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'stretch'
+  },
+  waitingOverlay: {
+    position: 'absolute',
+    flex: 1,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+    height: null,
+    elevation: 99,
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  spinner: {
+    height: 100,
+    width: 100
   }
 })

@@ -1,4 +1,4 @@
-package com.marshallofsound.gpmdp.remote.media;
+package com.marshallofsound.gpmdp.remote.websocket;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MediaPackage implements ReactPackage {
+public class WebSocketPackage implements ReactPackage {
 
-    private MediaModule pM = null;
+    private WebSocketModule wm = null;
 
     @Override
     public List<Class<? extends JavaScriptModule>> createJSModules() {
@@ -29,10 +29,9 @@ public class MediaPackage implements ReactPackage {
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        if (pM == null) {
-            pM = new MediaModule(reactContext);
-        }
-        modules.add(pM);
+        wm = new WebSocketModule(reactContext);
+
+        modules.add(wm);
 
         return modules;
     }

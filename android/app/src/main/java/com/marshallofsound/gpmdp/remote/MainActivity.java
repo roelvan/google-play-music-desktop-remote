@@ -15,6 +15,7 @@ import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.marshallofsound.gpmdp.remote.device.DevicePackage;
 import com.marshallofsound.gpmdp.remote.media.MediaPackage;
 import com.marshallofsound.gpmdp.remote.volume.VolumePackage;
+import com.marshallofsound.gpmdp.remote.websocket.WebSocketPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 
 import java.util.Arrays;
@@ -23,7 +24,6 @@ import java.util.List;
 public class MainActivity extends ReactActivity {
     private VolumePackage vP = null;
     private DevicePackage dP = null;
-    private MediaPackage mP = null;
 
     private boolean once = true;
 
@@ -34,10 +34,13 @@ public class MainActivity extends ReactActivity {
             once = false;
 //            enableImmersiveMode(decorView);
         }
-        if (mP != null) {
-            mP.createNotification();
-        }
         super.onCreate(a);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, PlaybackAPIService.class));
     }
 
     public static void enableImmersiveMode(final View decorView) {
@@ -90,15 +93,15 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         vP = new VolumePackage();
         dP = new DevicePackage();
-        mP = new MediaPackage();
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new ZeroconfReactPackage(),
             new ReactMaterialKitPackage(),
             new VectorIconsPackage(),
+            new WebSocketPackage(),
             dP,
             vP,
-            mP
+            new MediaPackage()
         );
     }
 
