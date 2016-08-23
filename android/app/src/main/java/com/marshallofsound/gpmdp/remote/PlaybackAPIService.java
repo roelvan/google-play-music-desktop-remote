@@ -94,12 +94,14 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
                             public void onConnectError(WebSocket websocket, WebSocketException cause) throws Exception {
                                 Log.d(WS_TAG, "ERROR");
                                 emitEvent("WebSocket:Error", null);
+                                InternalMediaService.destroy();
                             }
 
                             @Override
                             public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
                                 Log.d(WS_TAG, "CLOSE");
                                 emitEvent("WebSocket:Close", null);
+                                InternalMediaService.destroy();
                             }
 
                             @Override
