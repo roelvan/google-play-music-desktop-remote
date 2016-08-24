@@ -181,8 +181,10 @@ public class InternalMediaService {
     public static void destroy() {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mService);
         notificationManager.cancelAll();
-        mediaSession.setActive(false);
-        mediaSession.release();
+        if (mediaSession != null) {
+            mediaSession.setActive(false);
+            mediaSession.release();
+        }
     }
 }
 
