@@ -73,6 +73,7 @@ export default class WebSocketStore {
     this.isWaiting = false
     try {
       this.ipAddress = ip
+      this.trackStore.reset()
       BackgroundWebSocket.connect(this.ipAddress)
       this.shouldReconnect = true
     } catch (err) {
