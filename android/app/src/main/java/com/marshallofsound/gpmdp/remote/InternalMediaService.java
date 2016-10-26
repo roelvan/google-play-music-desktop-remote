@@ -73,11 +73,13 @@ public class InternalMediaService {
 
                     @Override
                     public void onSkipToNext() {
+                        mService.sendCommand("playback", "forward");
                         super.onSkipToNext();
                     }
 
                     @Override
                     public void onSkipToPrevious() {
+                        mService.sendCommand("playback", "rewind");
                         super.onSkipToPrevious();
                     }
                 });
