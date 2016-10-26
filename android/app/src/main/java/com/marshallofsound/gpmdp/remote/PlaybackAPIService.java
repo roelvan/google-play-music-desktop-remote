@@ -40,7 +40,7 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
     }
 
     public void emitEvent(String evName, String msg) {
-        Log.i(TAG, "Event: " + evName + ", Data: " + msg);
+        Log.i(TAG, "Event: " + evName);
         Intent WebSocketMessage = new Intent("com.gpmdp.WebSocketEvent");
         WebSocketMessage.putExtra("evName", evName);
         WebSocketMessage.putExtra("msg", msg);
@@ -161,7 +161,6 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
 
                             @Override
                             public void onTextMessage(WebSocket websocket, String text) throws Exception {
-                                Log.d(WS_TAG, text);
                                 if (ws_id == ws_id_counter) emitEvent("WebSocket:Message", text);
                                 // Handle message internally
                                 try {
