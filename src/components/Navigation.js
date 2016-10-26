@@ -43,16 +43,16 @@ export default class Navigation extends Component {
         id: 'remote',
         icon: 'home'
       },
-      {
-        name: 'Albums',
-        id: 'albums',
-        icon: 'album'
-      },
-      {
-        name: 'Artists',
-        id: 'artists',
-        icon: 'person'
-      },
+      // {
+      //   name: 'Albums',
+      //   id: 'albums',
+      //   icon: 'album'
+      // },
+      // {
+      //   name: 'Artists',
+      //   id: 'artists',
+      //   icon: 'person'
+      // },
       {
         name: 'Tracks',
         id: 'tracks',
