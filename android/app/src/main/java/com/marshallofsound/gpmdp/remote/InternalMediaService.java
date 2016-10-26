@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -56,6 +54,35 @@ public class InternalMediaService {
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
         mediaSession = new MediaSessionCompat(mService, "GPMDP_MusicService");
+
+        sReactContext.runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                mediaSession.setCallback(new MediaSessionCompat.Callback() {
+                    @Override
+                    public void onPlay() {
+                        mService.sendCommand("playback", "playPause");
+                        super.onPlay();
+                    }
+
+                    @Override
+                    public void onPause() {
+                        mService.sendCommand("playback", "playPause");
+                        super.onPause();
+                    }
+
+                    @Override
+                    public void onSkipToNext() {
+                        super.onSkipToNext();
+                    }
+
+                    @Override
+                    public void onSkipToPrevious() {
+                        super.onSkipToPrevious();
+                    }
+                });
+            }
+        });
 
         mediaSession.setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |

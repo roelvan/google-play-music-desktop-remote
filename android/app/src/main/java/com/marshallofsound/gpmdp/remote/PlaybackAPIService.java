@@ -47,8 +47,14 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
         LocalBroadcastManager.getInstance(this).sendBroadcast(WebSocketMessage);
     }
 
-    private void sendCommand(String namespace, String method) {
-        ws.sendText("{\"namespace\": \"" + namespace + "\", \"method\": \"" + method + "\"}");
+    public void sendCommand(String namespace, String method) {
+        sendCommand(namespace, method, "[]");
+    }
+
+    public void sendCommand(String namespace, String method, String argArray) {
+        if (ws != null) {
+            ws.sendText("{\"namespace\": \"" + namespace + "\", \"method\": \"" + method + "\", \"arguments\": " + argArray + "}");
+        }
     }
 
     @Override
