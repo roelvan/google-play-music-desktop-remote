@@ -123,7 +123,10 @@ export default class WebSocketStore {
     this.trackStore.reset()
 
     if (this.shouldReconnect) {
-      this.connect(this.ipAddress)
+      clearTimeout(this._timer)
+      this._timer = setTimeout(() => {
+        this.connect(this.ipAddress)
+      }, 2000)
     }
   }
 

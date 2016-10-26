@@ -28,6 +28,7 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
     public static Thread t = null;
     private WebSocketFactory factory;
     public static WebSocket ws;
+    private int ws_id_counter = 0;
 
     @Override
     public void onCreate() {
@@ -69,6 +70,7 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
             if (t != null) {
                 Log.d(TAG, "Killing existing thread");
                 try {
+                    ws.disconnect();
                     t.stop();
                     t.destroy();
                 } catch (UnsupportedOperationException e) {
@@ -83,6 +85,7 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
             //Always write your long running tasks in a separate thread, to avoid ANR
             t = new Thread(new Runnable() {
                 private String WS_TAG = "PlaybackAPIServer_WS";
+                private int ws_id = ++ws_id_counter;
 
                 @Override
                 public void run() {
@@ -103,21 +106,21 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
                             @Override
                             public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
                                 Log.d(WS_TAG, "OPEN");
-                                emitEvent("WebSocket:Open", null);
+                                if (ws_id == ws_id_counter) emitEvent("WebSocket:Open", null);
                                 InternalMediaService.getInstance().createNotification();
                             }
 
                             @Override
                             public void onConnectError(WebSocket websocket, WebSocketException cause) throws Exception {
                                 Log.d(WS_TAG, "ERROR");
-                                emitEvent("WebSocket:Error", null);
+                                if (ws_id == ws_id_counter) emitEvent("WebSocket:Error", null);
                                 InternalMediaService.destroy();
                             }
 
                             @Override
                             public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
                                 Log.d(WS_TAG, "CLOSE");
-                                emitEvent("WebSocket:Close", null);
+                                if (ws_id == ws_id_counter) emitEvent("WebSocket:Close", null);
                                 InternalMediaService.destroy();
                             }
 
@@ -159,7 +162,7 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
                             @Override
                             public void onTextMessage(WebSocket websocket, String text) throws Exception {
                                 Log.d(WS_TAG, text);
-                                emitEvent("WebSocket:Message", text);
+                                if (ws_id == ws_id_counter) emitEvent("WebSocket:Message", text);
                                 // Handle message internally
                                 try {
                                     JSONObject o = new JSONObject(text);
@@ -260,7 +263,6 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
                     }
                     if (ws != null) {
                         Log.d(WS_TAG, "CONNECTED TO " + ip);
-                        emitEvent("WebSocket:Open", null);
                     } else {
                         Log.d("Failed to connect", "Failed to connect");
                     }
