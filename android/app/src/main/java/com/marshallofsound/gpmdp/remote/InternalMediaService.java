@@ -1,7 +1,6 @@
 package com.marshallofsound.gpmdp.remote;
 
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,10 +23,11 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class InternalMediaService {
-    private static ReactContext sReactContext;
+    public static ReactContext sReactContext;
     public static MediaSessionCompat mediaSession;
     private MediaMetadataCompat.Builder meta;
     private android.support.v4.app.NotificationCompat.Builder builder;
+    private PlaybackStateCompat.Builder stateBuilder;
     private Bitmap image = null;
     private boolean playing = false;
     private Integer pos = 0;
@@ -55,18 +55,19 @@ public class InternalMediaService {
         audioManager.requestAudioFocus(mService,
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
-        ComponentName mediaButtonReceiver = new ComponentName(mService, InternalMediaService.class);
-        mediaSession = new MediaSessionCompat(mService, "FOO_BAR", mediaButtonReceiver, null);
-//        mediaSession.setCallback(null);
+        mediaSession = new MediaSessionCompat(mService, "GPMDP_MusicService");
 
         mediaSession.setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                         MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
-        mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                .setState(PlaybackStateCompat.STATE_PAUSED, 0, 0)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
-                .build());
+        stateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PAUSE |
+                            PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT |
+                            PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+                .setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+
+        mediaSession.setPlaybackState(stateBuilder.build());
         try {
             URL url = new URL("http://media.tumblr.com/tumblr_mf3r1eERKE1qgcb9y.jpg");
             image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
@@ -80,6 +81,8 @@ public class InternalMediaService {
                 .setSmallIcon(R.drawable.ic_headset_white_48dp)
                 .setStyle(new NotificationCompat.MediaStyle()
                 .setMediaSession(mediaSession.getSessionToken()));
+
+        Log.d("FOOBAR", "BUILT NOTIFY");
 
         PendingIntent contentIntent =
                 PendingIntent.getActivity(mService, 0, new Intent(mService, MainActivity.class), 0);
@@ -97,19 +100,15 @@ public class InternalMediaService {
         }
         if (current / 1000 != mCurrent) {
             mCurrent = current / 1000;
-            mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                    .setState(playing ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED, mCurrent, 1)
-                    .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
-                    .build());
+            stateBuilder.setState(playing ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED, mCurrent, 1);
+            mediaSession.setPlaybackState(stateBuilder.build());
         }
     }
 
     public void updatePlayState(Boolean isPlaying) {
         playing = isPlaying;
-        mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                .setState(playing ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED, pos, 1)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
-                .build());
+        stateBuilder.setState(playing ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED, pos, 1);
+        mediaSession.setPlaybackState(stateBuilder.build());
         updateNotificationActions();
         showNotification();
     }
@@ -130,10 +129,8 @@ public class InternalMediaService {
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, image);
 
         mediaSession.setMetadata(meta.build());
-        mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
-                .build());
+        stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, 0, 1);
+        mediaSession.setPlaybackState(stateBuilder.build());
 
         builder.setContentTitle(title)
                 .setContentText(artist + " - " + album)
@@ -185,27 +182,5 @@ public class InternalMediaService {
             mediaSession.setActive(false);
             mediaSession.release();
         }
-    }
-}
-
-class MediaSessionCB extends MediaSessionCompat.Callback {
-    @Override
-    public void onPlay() {
-        super.onPlay();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onCommand(String command, Bundle extras, ResultReceiver cb) {
-        super.onCommand(command, extras, cb);
-    }
-
-    @Override
-    public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-        return super.onMediaButtonEvent(mediaButtonEvent);
     }
 }

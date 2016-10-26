@@ -27,7 +27,7 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
     private boolean isRunning  = false;
     public static Thread t = null;
     private WebSocketFactory factory;
-    private WebSocket ws;
+    public static WebSocket ws;
 
     @Override
     public void onCreate() {
@@ -46,9 +46,26 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
         LocalBroadcastManager.getInstance(this).sendBroadcast(WebSocketMessage);
     }
 
+    private void sendCommand(String namespace, String method) {
+        ws.sendText("{\"namespace\": \"" + namespace + "\", \"method\": \"" + method + "\"}");
+    }
+
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        if (intent != null && intent.hasExtra("IP")) {
+        if (intent != null && intent.hasExtra("command") && ws != null) {
+            String command = intent.getStringExtra("command");
+            switch (command) {
+                case "prev_track":
+                    sendCommand("playback", "rewind");
+                    break;
+                case "play_pause_track":
+                    sendCommand("playback", "playPause");
+                    break;
+                case "next_track":
+                    sendCommand("playback", "forward");
+                    break;
+            }
+        }  else if (intent != null && intent.hasExtra("IP")) {
             if (t != null) {
                 Log.d(TAG, "Killing existing thread");
                 try {
