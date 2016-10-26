@@ -92,6 +92,7 @@ export default class WebSocketStore {
       this._q.forEach((dataPacket) => {
         this._onMessage(dataPacket.data, true)
       })
+      this._q = []
       setTimeout(() => {
         this.isWaiting = false
       }, 500)
