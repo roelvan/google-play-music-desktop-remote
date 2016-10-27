@@ -189,6 +189,8 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
                                                 payload.getInt("current"),
                                                 payload.getInt("total")
                                         );
+                                    } else if (o.getString("channel").equals("volume")) {
+                                        InternalMediaService.volumeController.setCurrentVolume(o.getInt("payload") / 5);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();

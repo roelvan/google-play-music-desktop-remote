@@ -27,15 +27,15 @@ public class VolumeModule extends ReactContextBaseJavaModule {
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            this.emitEvent("volume_up");
-            return true;
-        }
-
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            this.emitEvent("volume_down");
-            return true;
-        }
+//        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+////            this.emitEvent("volume_up");
+//            return true;
+//        }
+//
+//        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+////            this.emitEvent("volume_down");
+////            return true;
+//        }
         return false;
     }
 }

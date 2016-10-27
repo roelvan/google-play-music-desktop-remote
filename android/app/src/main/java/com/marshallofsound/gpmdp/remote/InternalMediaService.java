@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.VolumeProviderCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class InternalMediaService {
     public static ReactContext sReactContext;
     public static MediaSessionCompat mediaSession;
+    public static VolumeProviderCompat volumeController;
     private MediaMetadataCompat.Builder meta;
     private android.support.v4.app.NotificationCompat.Builder builder;
     private PlaybackStateCompat.Builder stateBuilder;
@@ -54,6 +56,24 @@ public class InternalMediaService {
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
         mediaSession = new MediaSessionCompat(mService, "GPMDP_MusicService");
+
+        volumeController = new VolumeProviderCompat(VolumeProviderCompat.VOLUME_CONTROL_ABSOLUTE, 20, 10) {
+            @Override
+            public void onSetVolumeTo(int volume) {
+                mService.sendCommand("volume", "setVolume", "[" + String.valueOf(volume * 5) + "]");
+                super.onSetVolumeTo(volume);
+                setCurrentVolume(volume);
+            }
+
+            @Override
+            public void onAdjustVolume(int direction) {
+                super.onAdjustVolume(direction);
+                mService.sendCommand("volume", "setVolume", "[" + String.valueOf(getCurrentVolume() * 5) + "]");
+                setCurrentVolume(getCurrentVolume() + direction);
+            }
+        };
+
+        mediaSession.setPlaybackToRemote(volumeController);
 
         sReactContext.runOnUiQueueThread(new Runnable() {
             @Override
