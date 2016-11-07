@@ -76,7 +76,9 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
             if (t != null) {
                 Log.d(TAG, "Killing existing thread");
                 try {
-                    ws.disconnect();
+                    if (ws != null) {
+                        ws.disconnect();
+                    }
                     t.stop();
                     t.destroy();
                 } catch (UnsupportedOperationException e) {
@@ -265,7 +267,9 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
                         ws.connect();
                     } catch (IOException | WebSocketException e) {
                         Log.d(WS_TAG, "FAILED TO CONNECT TO " + ip);
-                        ws.disconnect();
+                        if (ws != null) {
+                            ws.disconnect();
+                        }
                         ws = null;
                     }
                     if (ws != null) {
@@ -278,7 +282,9 @@ public class PlaybackAPIService extends Service implements AudioManager.OnAudioF
 
             t.start();
         } else if (intent != null && intent.hasExtra("MSG")) {
-            ws.sendText(intent.getStringExtra("MSG"));
+            if (ws != null) {
+                ws.sendText(intent.getStringExtra("MSG"));
+            }
         }
 
         return Service.START_STICKY;
