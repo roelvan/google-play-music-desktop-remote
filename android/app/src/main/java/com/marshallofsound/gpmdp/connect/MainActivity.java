@@ -1,4 +1,4 @@
-package com.marshallofsound.gpmdp.remote;
+package com.marshallofsound.gpmdp.connect;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -7,15 +7,16 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.balthazargronon.react.ZeroconfReactPackage;
+import com.balthazargronon.RCTZeroconf.ZeroconfReactPackage;
 import com.facebook.react.ReactActivity;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
-import com.marshallofsound.gpmdp.remote.device.DevicePackage;
-import com.marshallofsound.gpmdp.remote.media.MediaPackage;
-import com.marshallofsound.gpmdp.remote.volume.VolumePackage;
-import com.marshallofsound.gpmdp.remote.websocket.WebSocketPackage;
+import com.marshallofsound.gpmdp.connect.device.DevicePackage;
+import com.marshallofsound.gpmdp.connect.media.MediaPackage;
+import com.marshallofsound.gpmdp.connect.volume.VolumePackage;
+import com.marshallofsound.gpmdp.connect.websocket.WebSocketPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 
 import java.util.Arrays;
@@ -95,6 +96,7 @@ public class MainActivity extends ReactActivity {
         dP = new DevicePackage();
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNGoogleSigninPackage(),
             new ZeroconfReactPackage(),
             new ReactMaterialKitPackage(),
             new VectorIconsPackage(),

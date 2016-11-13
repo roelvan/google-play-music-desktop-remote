@@ -1,4 +1,4 @@
-package com.marshallofsound.gpmdp.remote.device;
+package com.marshallofsound.gpmdp.connect.device;
 
 import android.content.res.Configuration;
 

@@ -11,21 +11,8 @@ export default class Toolbar extends Component {
     navigator: PropTypes.object,
     title: PropTypes.string,
     settingsMenu: PropTypes.bool,
-    showDrawer: PropTypes.bool
-  }
-
-  _actionSelected = (actionIndex) => {
-    switch (actionIndex) {
-      case 0: {
-        this.props.navigator.push({
-          name: 'settings'
-        })
-        break
-      }
-      default: {
-        break
-      }
-    }
+    showDrawer: PropTypes.bool,
+    noIcon: PropTypes.bool
   }
 
   _backButtonPressed = () => {
@@ -37,23 +24,16 @@ export default class Toolbar extends Component {
   }
 
   render () {
-    const { color, title, settingsMenu, showDrawer, drawerFunction } = this.props
-    const actions = [
-      {
-        title: 'Settings'
-      }
-    ]
+    const { color, title, settingsMenu, showDrawer, noIcon, drawerFunction } = this.props
 
     if (Platform.OS === 'android') {
       return (
         <Icon.ToolbarAndroid
-          navIconName={showDrawer ? 'md-menu' : 'md-arrow-back'}
+          navIconName={noIcon ? undefined : (showDrawer ? 'md-menu' : 'md-arrow-back')}
           onIconClicked={showDrawer ? drawerFunction : this._backButtonPressed}
           style={[styles.toolbar, { backgroundColor: color }]}
           titleColor={'white'}
           title={title}
-          actions={(settingsMenu ? actions : null)}
-          onActionSelected={this._actionSelected}
         />
       )
     }

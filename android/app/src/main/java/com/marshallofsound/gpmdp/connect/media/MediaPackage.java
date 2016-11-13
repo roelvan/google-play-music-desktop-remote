@@ -1,4 +1,4 @@
-package com.marshallofsound.gpmdp.remote.media;
+package com.marshallofsound.gpmdp.connect.media;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

@@ -1,4 +1,4 @@
-package com.marshallofsound.gpmdp.remote.websocket;
+package com.marshallofsound.gpmdp.connect.websocket;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

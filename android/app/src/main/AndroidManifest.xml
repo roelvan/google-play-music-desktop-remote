@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.marshallofsound.gpmdp.remote">
+    package="com.marshallofsound.gpmdp.connect">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -7,12 +7,12 @@
       android:allowBackup="true"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
+      android:persistent="true"
       android:theme="@style/AppTheme">
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-        android:launchMode="singleInstance">
+        android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -21,9 +21,9 @@
       <receiver android:name=".RemoteControlReceiver">
         <intent-filter>
           <action android:name="android.intent.action.MEDIA_BUTTON" />
-          <action android:name="com.marshallofsound.gpmdp.remote.media.CONTROLLER.prev" />
-            <action android:name="com.marshallofsound.gpmdp.remote.media.CONTROLLER.playpause" />
-            <action android:name="com.marshallofsound.gpmdp.remote.media.CONTROLLER.next" />
+          <action android:name="com.marshallofsound.gpmdp.connect.media.CONTROLLER.prev" />
+            <action android:name="com.marshallofsound.gpmdp.connect.media.CONTROLLER.playpause" />
+            <action android:name="com.marshallofsound.gpmdp.connect.media.CONTROLLER.next" />
             <action android:name="com.gpmdp.WebSocketEvent" />
         </intent-filter>
       </receiver>

@@ -1,4 +1,4 @@
-package com.marshallofsound.gpmdp.remote.volume;
+package com.marshallofsound.gpmdp.connect.volume;
 
 import android.view.KeyEvent;
 

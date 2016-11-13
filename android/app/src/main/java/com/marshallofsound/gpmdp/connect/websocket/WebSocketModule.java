@@ -1,4 +1,4 @@
-package com.marshallofsound.gpmdp.remote.websocket;
+package com.marshallofsound.gpmdp.connect.websocket;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +15,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.marshallofsound.gpmdp.remote.PlaybackAPIService;
+import com.marshallofsound.gpmdp.connect.PlaybackAPIService;
 
 public class WebSocketModule extends ReactContextBaseJavaModule {
     private ReactContext reactContext;
@@ -53,9 +53,9 @@ public class WebSocketModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void connect(String ip) {
+    public void connect(String email) {
         Intent intent = new Intent(reactContext, PlaybackAPIService.class);
-        intent.putExtra("IP", ip);
+        intent.putExtra("email", email);
         reactContext.startService(intent);
     }
 

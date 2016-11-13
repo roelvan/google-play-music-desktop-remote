@@ -20,6 +20,7 @@
     "react": "15.0.2",
     "react-native": "^0.26.2",
     "react-native-drawer-layout": "^1.0.0",
+    "react-native-google-signin": "0.7.2",
     "react-native-material-kit": "github:xinthink/react-native-material-kit",
     "react-native-scrollable-tab-view": "^0.5.0",
     "react-native-vector-icons": "^2.0.3",

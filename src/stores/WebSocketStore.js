@@ -10,7 +10,6 @@ export default class WebSocketStore {
   themeStore
   trackStore
   libraryStore
-  @observable ipAddress
   @observable port
   @observable webSocket = null
   @observable isConnecting = false
@@ -64,17 +63,14 @@ export default class WebSocketStore {
     DeviceEventEmitter.addListener('WebSocket:Close', (...args) => this._onConnectionClose(...args))
   }
 
-  connect = (ip) => {
-    ip = ip.trim() // eslint-disable-line
-    if (!ip || ip === 'NOT_SET') {
-      return
-    }
+  connect = async () => {
+    const email = await AsyncStorage.getItem('email')
+    console.log('Connecting to ', email)
     this.isConnecting = true
     this.isWaiting = false
     try {
-      this.ipAddress = ip
       this.trackStore.reset()
-      BackgroundWebSocket.connect(this.ipAddress)
+      BackgroundWebSocket.connect(email)
       this.shouldReconnect = true
     } catch (err) {
       this.disconnect()
@@ -86,7 +82,20 @@ export default class WebSocketStore {
     BackgroundWebSocket.disconnect()
   }
 
-  _onConnectionOpen = () => {
+  _sendAuth = () => {
+    DeviceInfo.getDeviceName()
+      .then((deviceName) => {
+        AsyncStorage.getItem('AUTH_CODE')
+          .then((value) => {
+            this.awaitingCode = false
+            this._sendMessage({ namespace: 'connect', method: 'connect', arguments: [deviceName, value] })
+          })
+          .catch(() => {})
+      })
+  }
+
+  _onConnectionOpen = async () => {
+    const email = await AsyncStorage.getItem('email')
     this.isWaiting = true
     setTimeout(() => {
       this._q.forEach((dataPacket) => {
@@ -99,15 +108,8 @@ export default class WebSocketStore {
     }, 2000)
     this.isConnecting = false
     this.isConnected = true
-    DeviceInfo.getDeviceName()
-      .then((deviceName) => {
-        AsyncStorage.getItem('AUTH_CODE')
-          .then((value) => {
-            this.awaitingCode = false
-            this._sendMessage({ namespace: 'connect', method: 'connect', arguments: [deviceName, value] })
-          })
-          .catch(() => {})
-      })
+    this._sendMessage({ type: 'connect', email, clientType: 'remote' })
+    this._sendAuth()
   }
 
   _onConnectionError = (error) => {
@@ -124,8 +126,9 @@ export default class WebSocketStore {
 
     if (this.shouldReconnect) {
       clearTimeout(this._timer)
-      this._timer = setTimeout(() => {
-        this.connect(this.ipAddress)
+      this._timer = setTimeout(async () => {
+        const email = await AsyncStorage.getItem('email')
+        this.connect(email)
       }, 2000)
     }
   }
@@ -139,7 +142,18 @@ export default class WebSocketStore {
       return
     }
     this.lastMessage = msg
-    const { channel, payload } = JSON.parse(msg.data)
+    const { channel, payload, type, players } = JSON.parse(msg.data)
+    if (type === 'player_list') {
+      if (players.length === 0) return
+      this._sendMessage({ target: players[0].id, initialConnect: true })
+      this._sendAuth()
+      return
+    }
+    if (type === 'disconnect') {
+      this.shouldReconnect = false
+      clearTimeout(this._timer)
+      return
+    }
     switch (channel) {
       case 'connect': {
         if (payload === 'CODE_REQUIRED') {

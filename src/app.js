@@ -6,12 +6,11 @@ import PlaylistScreen from './screens/PlaylistScreen'
 import SearchStore from './stores/SearchStore'
 
 import LibraryStore from './stores/LibraryStore'
-import SettingsScreen from './screens/SettingsScreen'
 import SettingsStore from './stores/SettingsStore'
+import SignInScreen from './screens/SignInScreen'
 import ThemeStore from './stores/ThemeStore'
 import TrackStore from './stores/TrackStore'
 import WebSocketStore from './stores/WebSocketStore'
-import ZeroConfScreen from './screens/ZeroConfScreen'
 
 const libraryStore = new LibraryStore()
 const searchStore = new SearchStore()
@@ -48,21 +47,18 @@ export default class App extends Component {
     if (!this.state.loaded) return null
     return (
       <Navigator
-        initialRoute={{ name: 'remote' }}
+        initialRoute={{ name: 'signin' }}
         renderScene={(route, navigator) => {
           switch (route.name) {
             case 'playlist': {
               return (<PlaylistScreen navigator={navigator} webSocketStore={webSocketStore} playlist={route.playlist} themeStore={themeStore} />)
             }
-            case 'customip': {
-              return (<SettingsScreen navigator={navigator} settingsStore={settingsStore} themeStore={themeStore} />)
-            }
-            case 'settings': {
-              return (<ZeroConfScreen navigator={navigator} themeStore={themeStore} settingsStore={settingsStore} webSocketStore={webSocketStore} />)
-            }
-            default:
             case 'remote': {
               return (<HomeScreen libraryStore={libraryStore} searchStore={searchStore} trackStore={trackStore} webSocketStore={webSocketStore} navigator={navigator} settingsStore={settingsStore} themeStore={themeStore} />)
+            }
+            default:
+            case 'signin': {
+              return <SignInScreen navigator={navigator} settingsStore={settingsStore} themeStore={themeStore} webSocketStore={webSocketStore} />
             }
           }
         }}

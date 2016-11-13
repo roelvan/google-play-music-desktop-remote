@@ -82,7 +82,7 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "com.marshallofsound.gpmdp.remote"
+        applicationId "com.marshallofsound.gpmdp.connect"
         minSdkVersion 16
         targetSdkVersion 24
 
@@ -156,6 +156,10 @@ android {
 }
 
 dependencies {
+    compile(project(':react-native-google-signin')){
+        exclude group: "com.google.android.gms"
+    }
+    compile 'com.google.android.gms:play-services-auth:9.8.0'
     compile project(':react-native-material-kit')
     compile project(':react-native-zeroconf')
     compile fileTree(dir: "libs", include: ["*.jar"])
@@ -172,3 +176,5 @@ project.afterEvaluate {
     def generateReleasePlayResources = project.tasks.getByName("generateReleasePlayResources")
     generateReleasePlayResources.dependsOn assembleRelease
 }
+
+apply plugin: 'com.google.gms.google-services'

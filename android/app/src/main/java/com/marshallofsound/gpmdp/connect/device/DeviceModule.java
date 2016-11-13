@@ -1,11 +1,10 @@
-package com.marshallofsound.gpmdp.remote.device;
+package com.marshallofsound.gpmdp.connect.device;
 
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
