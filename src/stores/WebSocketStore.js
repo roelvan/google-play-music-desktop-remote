@@ -59,7 +59,7 @@ export default class WebSocketStore {
       }
     })
     DeviceEventEmitter.addListener('WebSocket:Open', (...args) => this._onConnectionOpen(...args))
-    DeviceEventEmitter.addListener('WebSocket:Error', (...args) => this._onConnectioError(...args))
+    DeviceEventEmitter.addListener('WebSocket:Error', (...args) => this._onConnectionError(...args))
     DeviceEventEmitter.addListener('WebSocket:Message', (data) => this._onMessage(data.msg))
     DeviceEventEmitter.addListener('WebSocket:Close', (...args) => this._onConnectionClose(...args))
   }
